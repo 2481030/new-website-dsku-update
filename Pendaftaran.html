@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+
+<html lang="id" data-theme="dark">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pendaftaran - Pemuda Advent DSKU</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+
+/* Terapkan tema sebelum halaman tampil agar tidak berkedip */
+
+(function(){var t=null;try{t=localStorage.getItem("dsku-theme")}catch(e){}
+
+if(!t)t=matchMedia("(prefers-color-scheme: light)").matches?"light":"dark";
+
+document.documentElement.setAttribute("data-theme",t)})();
+
+</script>
+
+<style>
+
+:root{--bg:#07090D;--panel:#0E141C;--panel2:#161F2B;--line:rgba(255,255,255,.08);--text:#F1F3F7;--muted:#8D98A9;
+
+--amber:#E8A33D;--amber-ink:#EDB454;--red:#D6293B;--forest:#2F6F52;--field:rgba(255,255,255,.04);--shadow:0 30px 50px -30px rgba(0,0,0,.85);
+
+--veil:rgba(7,9,13,.82);--gold-line:linear-gradient(90deg,transparent,#E8A33D,transparent);
+
+--bg-img:url("https://tse3.mm.bing.net/th/id/OIP.Mk_j8663P5CX6xmguGjD7gHaDq?r=0&pid=Api&h=220&P=0")}
+
+[data-theme="light"]{--bg:#F3F1EC;--panel:#FFFFFF;--panel2:#FAF8F4;--line:#E3DED3;--text:#141A25;--muted:#667085;
+
+--amber-ink:#9A5A06;--field:#FBFAF7;--shadow:0 24px 44px -30px rgba(60,40,10,.35);
+
+--veil:rgba(243,241,236,.6);
+
+--bg-img:url("images/bg-terang.png")}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{margin:0;font-family:Outfit,Arial,sans-serif;font-size:15px;line-height:1.5;background:var(--bg);color:var(--text);transition:*background* .3s,color .3s;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* BACKGROUND GAMBAR (gelap = gambar Bing, terang = images/bg-terang.png) + veil agar teks terbaca */
+
+body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+
+background:
+
+  radial-gradient(60rem 34rem at 90% -10%,color-mix(in srgb,var(--amber) 14%,transparent),transparent 60%),
+
+  linear-gradient(var(--veil),var(--veil)),
+
+  var(--bg-img) center/cover no-repeat;
+
+transition:*background* .3s}
+
+a{color:inherit;text-decoration:none}
+
+button{font-family:inherit;color:inherit}
+
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+.i{width:1.15rem;height:1.15rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+
+.i-moon{display:none}
+
+[data-theme="light"] .i-sun{display:none}
+
+[data-theme="light"] .i-moon{display:inline}
+
+
+
+/* SIDEBAR */
+
+.side{position:fixed;inset:0 auto 0 0;width:264px;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:26px 16px 20px;z-index:200;transition:transform .3s,*background* .3s;box-shadow:20px 0 50px -30px rgba(0,0,0,.5)}
+
+.side::after{content:"";position:absolute;top:0;right:-1px;width:1px;height:100%;background:linear-gradient(180deg,transparent,color-mix(in srgb,var(--amber) 55%,transparent),transparent);pointer-events:none}
+
+.brand{display:flex;align-items:center;gap:14px;padding:0 8px 24px;margin-bottom:20px;border-bottom:1px solid var(--line)}
+
+.logo{width:92px;height:54px;display:grid;place-items:center;flex:none}
+
+.logo img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 6px 14px rgba(0,0,0,.4))}
+
+.brand b{display:block;font-size:1.1rem;font-weight:800;line-height:1.15;letter-spacing:.01em}
+
+.brand small{color:var(--amber-ink);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;font-weight:600}
+
+.nav{display:flex;flex-direction:column;gap:5px}
+
+.nav>*,.nav-btn{display:flex;align-items:center;gap:13px;padding:13px 14px;border-radius:13px;border:1px solid transparent;background:none;color:var(--muted);font-weight:600;font-size:.9rem;cursor:pointer;text-align:left;width:100%;transition:.25s}
+
+.nav>*:hover,.nav-btn:hover{background:var(--panel2);color:var(--text);transform:translateX(3px)}
+
+.nav>.on{background:linear-gradient(90deg,color-mix(in srgb,var(--amber) 20%,transparent),transparent);border-color:color-mix(in srgb,var(--amber) 32%,transparent);color:var(--amber-ink)}
+
+.side-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line);padding-top:14px}
+
+.side-foot small{color:var(--muted);font-size:.7rem;padding:0 14px;letter-spacing:.04em}
+
+.scrim{display:none}
+
+
+
+/* TOPBAR */
+
+.dash{margin-left:264px}
+
+.top{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:12px;padding:16px 40px;background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+
+.ttl{flex:1;min-width:0}
+
+.ttl h1{margin:0;font:400 2.1rem/1 "Bebas Neue",sans-serif;letter-spacing:.07em;background:linear-gradient(90deg,var(--text),var(--amber-ink));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+.ttl small{color:var(--muted);font-size:.78rem;letter-spacing:.14em;text-transform:uppercase}
+
+.btn,.ibtn{display:inline-flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel);font-weight:600;font-size:.85rem;cursor:pointer;transition:.25s}
+
+.btn:hover,.ibtn:hover{border-color:var(--amber);color:var(--amber-ink);transform:translateY(-2px);box-shadow:0 10px 20px -12px var(--amber)}
+
+.ibtn{padding:10px}
+
+.menu-btn{display:none}
+
+/* KONTEN */
+
+.wrap{max-width:1000px;margin:auto;padding:34px 40px 56px}
+
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+
+.stat{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:18px 20px;box-shadow:var(--shadow);overflow:hidden;transition:.3s}
+
+.stat::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold-line);opacity:.7}
+
+.stat:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--amber) 40%,var(--line))}
+
+.stat small{color:var(--muted);font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;font-weight:600}
+
+.stat b{display:block;font-size:1.4rem;font-weight:800;margin-top:4px}
+
+.bar{height:5px;border-radius:6px;background:var(--line);margin-top:12px;overflow:hidden}
+
+.bar i{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--forest),var(--amber));transition:width .5s cubic-bezier(.4,0,.2,1)}
+
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:28px;padding:42px;box-shadow:var(--shadow)}
+
+.card::before{content:"";position:absolute;top:-1px;left:42px;right:42px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--forest),var(--amber),var(--red))}
+
+/* TOGGLE 3 JENIS */
+
+.seg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);padding:5px;border-radius:16px;background:var(--field);border:1px solid var(--line);max-width:560px}
+
+.seg i{position:absolute;top:5px;bottom:5px;left:5px;width:calc((100% - 10px)/3);border-radius:12px;background:linear-gradient(135deg,var(--amber),var(--red));box-shadow:0 10px 22px -10px var(--red);transition:transform .35s cubic-bezier(.4,0,.2,1)}
+
+.seg[data-active="kamporee"] i{transform:translateX(100%)}
+
+.seg[data-active="pendataan"] i{transform:translateX(200%)}
+
+.seg button{position:relative;z-index:1;padding:12px;border:0;background:none;font-weight:600;font-size:.85rem;letter-spacing:.03em;color:var(--muted);cursor:pointer;transition:color .25s}
+
+.seg button.on{color:#fff}
+
+.blk{display:flex;flex-direction:column;gap:20px}
+
+.blk:not(.hide){animation:fade .4s ease}
+
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+.hide{display:none}
+
+form{counter-reset:sec}
+
+.h{counter-increment:sec;margin:22px 0 0;padding-bottom:14px;border-bottom:1px solid var(--line);font:400 1.65rem/1 "Bebas Neue",sans-serif;letter-spacing:.08em;color:var(--amber-ink);display:flex;align-items:center;gap:14px}
+
+.h::before{content:counter(sec,decimal-leading-zero);display:grid;place-items:center;width:36px;height:36px;flex:none;border-radius:11px;font:600 .8rem Outfit,sans-serif;letter-spacing:.05em;color:var(--amber-ink);border:1px solid color-mix(in srgb,var(--amber) 45%,transparent);background:color-mix(in srgb,var(--amber) 11%,transparent)}
+
+.blk>.h:first-child{margin-top:0}
+
+.row{display:grid;gap:20px}
+
+@media(min-width:720px){.c2{grid-template-columns:1fr 1fr}.c3{grid-template-columns:repeat(3,1fr)}}
+
+.f{display:flex;flex-direction:column;gap:8px}
+
+.f>span{font-size:.76rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+
+.f>input,.f>select,.f>textarea{width:100%;padding:15px 17px;border-radius:14px;border:1px solid var(--line);background:var(--field);color:var(--text);font:inherit;transition:border-color .2s,box-shadow .2s,*background* .2s}
+
+.f>input::placeholder,.f>textarea::placeholder{color:color-mix(in srgb,var(--muted) 65%,transparent)}
+
+.f>input:hover,.f>select:hover,.f>textarea:hover{border-color:color-mix(in srgb,var(--amber) 45%,var(--line))}
+
+.f>textarea{resize:none}
+
+.f>select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' stroke='%238b96a6' stroke-width='2' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:42px;cursor:pointer}
+
+.f>select option{background:var(--panel);color:var(--text)}
+
+.f>select optgroup{color:var(--amber-ink)}
+
+.f>input:focus,.f>select:focus,.f>textarea:focus{outline:0;border-color:var(--amber);box-shadow:0 0 0 4px color-mix(in srgb,var(--amber) 20%,transparent)}
+
+.pills{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:10px}
+
+.pills:has(label:only-child){grid-template-columns:1fr}
+
+.pills label{position:relative;cursor:pointer}
+
+.pills input{position:absolute;opacity:0;inset:0;cursor:pointer}
+
+.pills span{display:flex;align-items:center;justify-content:center;min-height:48px;padding:12px;text-align:center;font-size:.88rem;border:1px solid var(--line);border-radius:14px;background:var(--field);transition:.25s}
+
+.pills label:hover span{border-color:color-mix(in srgb,var(--amber) 55%,var(--line));transform:translateY(-1px)}
+
+.pills input:checked+span{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 15%,transparent);color:var(--amber-ink);font-weight:600;box-shadow:0 10px 20px -14px var(--amber)}
+
+.pills input:focus-visible+span{outline:2px solid var(--amber);outline-offset:2px}
+
+.drop{position:relative;border:1.5px dashed color-mix(in srgb,var(--amber) 35%,var(--line));border-radius:22px;padding:42px 16px;text-align:center;background:var(--field);color:var(--muted);transition:.25s}
+
+.drop:hover{border-color:var(--amber);background:color-mix(in srgb,var(--amber) 6%,transparent)}
+
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+
+.drop .i{width:3.2rem;height:3.2rem;padding:.85rem;margin-bottom:10px;border-radius:50%;color:var(--amber-ink);border:1px solid color-mix(in srgb,var(--amber) 40%,transparent);background:color-mix(in srgb,var(--amber) 10%,transparent)}
+
+.drop p{margin:0;font-weight:600;font-size:.9rem;color:var(--text)}
+
+.send{width:100%;margin-top:6px;padding:19px;border:1px solid color-mix(in srgb,var(--amber) 50%,transparent);border-radius:16px;background:linear-gradient(135deg,var(--red),#9E1B2B);color:#fff;font-weight:800;font-size:.85rem;letter-spacing:.26em;cursor:pointer;box-shadow:0 18px 34px -14px rgba(214,41,59,.65);transition:.25s}
+
+.send:hover{transform:translateY(-3px);filter:brightness(1.1);box-shadow:0 24px 40px -14px rgba(214,41,59,.75)}
+
+.send:active{transform:none}
+
+/* LOADING OVERLAY — premium, elegant, responsive */
+#loader{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:10000;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  padding:28px 20px;
+  color:#F7F8FA;
+  text-align:center;
+  font-family:Outfit,Arial,sans-serif;
+  background:
+    radial-gradient(ellipse at 50% 38%,rgba(232,163,61,.13),transparent 36%),
+    radial-gradient(ellipse at 12% 10%,rgba(47,111,82,.13),transparent 34%),
+    linear-gradient(145deg,rgba(5,8,13,.97),rgba(10,15,23,.985) 55%,rgba(5,8,13,.98));
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+#loader::before,#loader::after{
+  content:"";
+  position:absolute;
+  width:min(72vw,520px);
+  aspect-ratio:1;
+  border:1px solid rgba(232,163,61,.075);
+  border-radius:50%;
+  pointer-events:none;
+}
+#loader::before{transform:scale(.78)}
+#loader::after{transform:scale(1.08);border-color:rgba(255,255,255,.035)}
+.loader-card{
+  position:relative;
+  z-index:1;
+  width:min(100%,470px);
+  padding:38px 34px 32px;
+  border:1px solid rgba(255,255,255,.105);
+  border-radius:28px;
+  background:linear-gradient(150deg,rgba(25,32,42,.82),rgba(11,16,24,.78));
+  box-shadow:0 28px 90px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.055);
+}
+.loader-mark{
+  width:86px;
+  height:86px;
+  margin:0 auto 24px;
+  display:grid;
+  place-items:center;
+  position:relative;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(232,163,61,.13),rgba(232,163,61,.025) 68%);
+}
+.loader-mark::before,.loader-mark::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:50%;
+}
+.loader-mark::before{
+  border:2px solid rgba(255,255,255,.09);
+  border-top-color:#F1B653;
+  border-right-color:rgba(232,163,61,.55);
+  animation:loaderRotate 1.35s linear infinite;
+}
+.loader-mark::after{
+  inset:9px;
+  border:1px solid rgba(255,255,255,.1);
+  border-bottom-color:rgba(232,163,61,.75);
+  animation:loaderRotate 2.2s linear infinite reverse;
+}
+.loader-mark svg{width:30px;height:30px;stroke:#F1B653;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.loader-kicker{
+  margin:0 0 9px;
+  color:#E8A33D;
+  font-size:.68rem;
+  font-weight:700;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+}
+.loader-title{
+  margin:0;
+  color:#F7F8FA;
+  font-size:clamp(1.25rem,4vw,1.65rem);
+  line-height:1.25;
+  font-weight:700;
+  letter-spacing:.015em;
+}
+.loader-copy{
+  max-width:340px;
+  margin:11px auto 22px;
+  color:#9CA8B8;
+  font-size:.88rem;
+  line-height:1.7;
+  font-weight:400;
+}
+.loader-recipient{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  max-width:100%;
+  padding:9px 14px;
+  border:1px solid rgba(232,163,61,.22);
+  border-radius:999px;
+  background:rgba(232,163,61,.075);
+  color:#EFC477;
+  font-size:.76rem;
+  line-height:1.4;
+  letter-spacing:.025em;
+  overflow-wrap:anywhere;
+}
+.loader-recipient svg{width:15px;height:15px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8}
+.loader-progress{
+  height:3px;
+  margin:27px 0 15px;
+  overflow:hidden;
+  border-radius:10px;
+  background:rgba(255,255,255,.09);
+}
+.loader-progress span{
+  display:block;
+  width:38%;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,transparent,#D99531,#F6D18A,transparent);
+  box-shadow:0 0 14px rgba(232,163,61,.45);
+  animation:loaderProgress 1.8s ease-in-out infinite;
+}
+.loader-status{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  color:#8491A2;
+  font-size:.7rem;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+.loader-status i{
+  width:6px;height:6px;display:inline-block;border-radius:50%;
+  background:#DCA34A;box-shadow:0 0 10px rgba(232,163,61,.65);
+  animation:loaderPulse 1.2s ease-in-out infinite;
+}
+@keyframes loaderRotate{to{transform:rotate(360deg)}}
+@keyframes loaderProgress{0%{transform:translateX(-110%)}100%{transform:translateX(280%)}}
+@keyframes loaderPulse{50%{opacity:.35;transform:scale(.75)}}
+@media(max-width:480px){
+  .loader-card{padding:32px 20px 26px;border-radius:23px}
+  .loader-mark{width:76px;height:76px;margin-bottom:21px}
+  .loader-copy{font-size:.82rem}
+  .loader-recipient{font-size:.7rem}
+}
+@media(prefers-reduced-motion:reduce){
+  .loader-mark::before,.loader-mark::after,.loader-progress span,.loader-status i{animation:none}
+  .loader-progress span{width:100%;transform:none}
+}
+
+.swal2-popup{background:var(--panel)!important;color:var(--text)!important;border:1px solid var(--line);border-radius:24px!important;font-family:Outfit,sans-serif!important}
+
+.swal2-title,.swal2-html-container{color:var(--text)!important}
+
+
+
+@media(max-width:900px){
+
+ .side{transform:translateX(-100%)}.side.open{transform:none}
+
+ .dash{margin-left:0}.menu-btn{display:inline-flex}
+
+ .scrim.open{display:block;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:150}
+
+ .top{padding:12px 16px}.wrap{padding:22px 16px 36px}
+
+ .stats{grid-template-columns:1fr}.card{padding:26px 20px}.card::before{left:20px;right:20px}
+
+ .ttl h1{font-size:1.7rem}
+
+}
+
+@media(max-width:560px){.btn span{display:none}.btn{padding:10px}.seg button{font-size:.74rem;padding:12px 4px}}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important;animation:none!important}}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+
+ <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></symbol>
+
+ <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.5 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></symbol>
+
+ <symbol id="i-tent" viewBox="0 0 24 24"><path d="M3 20L12 4l9 16H3z"/><path d="M12 20v-6"/></symbol>
+
+ <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 010 6.8M18 14.3c2.2.6 3.5 2.6 3.5 5.7"/></symbol>
+
+ <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+
+ <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z"/></symbol>
+
+ <symbol id="i-menu" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></symbol>
+
+ <symbol id="i-back" viewBox="0 0 24 24"><path d="M10 19l-7-7 7-7M3 12h18"/></symbol>
+
+ <symbol id="i-up" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1M16 8l-4-4-4 4M12 4v12"/></symbol>
+
+</svg>
+
+
+
+<div id="loader" role="status" aria-live="polite" aria-label="Mengirim data pendaftaran">
+  <div class="loader-card">
+    <div class="loader-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><path d="M5 12.5 9.2 16.5 19 7.5"/><path d="M12 2.8 14.4 4l2.7-.1 1.1 2.5 2 1.8-.7 2.6.7 2.6-2 1.8-1.1 2.5-2.7-.1-2.4 1.2-2.4-1.2-2.7.1-1.1-2.5-2-1.8.7-2.6-.7-2.6 2-1.8 1.1-2.5 2.7.1z" opacity=".5"/></svg>
+    </div>
+    <p class="loader-kicker">Pathfinder DSKU · Data System</p>
+    <h2 class="loader-title">Mengirim Data Pendaftaran</h2>
+    <p class="loader-copy">Mohon tunggu sebentar. Data Anda sedang diproses dan dikirim dengan aman ke sistem.</p>
+    <div class="loader-recipient">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+      <span>Penerima: <strong>MG Rudianjaya Purba</strong></span>
+    </div>
+    <div class="loader-progress" aria-hidden="true"><span></span></div>
+    <div class="loader-status"><i></i> Sedang menghubungkan ke server</div>
+  </div>
+</div>
+
+<div class="scrim" id="scrim"></div>
+
+
+
+<!-- SIDEBAR -->
+
+<aside class="side" id="side">
+
+  <a href="index.html" data-home class="brand">
+
+    <span class="logo"><img src="images/dsku.png" alt="Logo North Sumatera Mission"></span>
+
+    <div><b>Pemuda Advent</b><small>DSKU</small></div>
+
+  </a>
+
+  <nav class="nav">
+
+    <a href="index.html" data-home><svg class="i"><use href="#i-home"/></svg>Home</a>
+
+    <button type="button" data-target="masterguide" class="on"><svg class="i"><use href="#i-star"/></svg>Master Guide</button>
+
+    <button type="button" data-target="kamporee"><svg class="i"><use href="#i-tent"/></svg>Kamporee</button>
+
+    <button type="button" data-target="pendataan"><svg class="i"><use href="#i-users"/></svg>Pendataan</button>
+
+  </nav>
+
+  <div class="side-foot">
+
+    <button type="button" class="nav-btn theme-toggle"><svg class="i i-sun"><use href="#i-sun"/></svg><svg class="i i-moon"><use href="#i-moon"/></svg><span class="theme-label">Tema terang</span></button>
+
+    <small>&copy; 2026 Pathfinder DSKU Data System</small>
+
+  </div>
+
+</aside>
+
+
+
+<div class="dash">
+
+  <!-- TOPBAR -->
+
+  <header class="top">
+
+    <button type="button" class="ibtn menu-btn" id="menuBtn" aria-label="Buka menu"><svg class="i"><use href="#i-menu"/></svg></button>
+
+    <div class="ttl"><h1 id="title">Pendaftaran Master Guide</h1><small>Pemuda Advent DSKU</small></div>
+
+    <a href="index.html" data-home class="btn"><svg class="i"><use href="#i-back"/></svg><span>Kembali ke Home</span></a>
+
+    <button type="button" class="ibtn theme-toggle" aria-label="Ganti tema terang atau gelap" title="Ganti tema"><svg class="i i-sun"><use href="#i-sun"/></svg><svg class="i i-moon"><use href="#i-moon"/></svg></button>
+
+  </header>
+
+
+
+  <main class="wrap">
+
+    <div class="stats">
+
+      <div class="stat"><small>Jenis pendaftaran</small><b id="statType">Master Guide</b></div>
+
+      <div class="stat"><small>Kelengkapan isian</small><b id="statPct">0%</b><div class="bar"><i id="bar"></i></div></div>
+
+      <div class="stat"><small>Bukti unggahan</small><b id="statFile">Belum diunggah</b></div>
+
+    </div>
+
+
+
+    <div class="card">
+
+      <div class="seg" id="segTrack" data-active="masterguide">
+
+        <i></i>
+
+        <button type="button" data-target="masterguide" class="on">Master Guide</button>
+
+        <button type="button" data-target="kamporee">Kamporee</button>
+
+        <button type="button" data-target="pendataan">Pendataan</button>
+
+      </div>
+
+      <form id="pendaftaranForm" class="blk" style="margin-top:26px">
+
+
+
+        <!-- ===== MASTER GUIDE ===== -->
+
+        <div id="form-masterguide" class="blk">
+
+          <h2 class="h">Informasi Peserta</h2>
+
+          <div class="row c2">
+
+            <label class="f"><span>Nama Lengkap</span><input type="text" name="mg_fullName" required placeholder="Nama Lengkap"></label>
+
+            <div class="f"><span>Jenis Kelamin</span><div class="pills" data-name="mg_gender" data-req data-opts="Laki-laki|Perempuan"></div></div>
+
+          </div>
+
+          <div class="row c2">
+
+            <label class="f"><span>Tempat, Tanggal Lahir</span><input type="text" name="mg_ttl" required placeholder="Kota, DD/MM/YYYY"></label>
+
+            <label class="f"><span>Nomor HP / WhatsApp</span><input type="tel" name="mg_phone" required placeholder="0812xxxx"></label>
+
+          </div>
+
+          <label class="f"><span>Alamat</span><textarea name="mg_address" rows="2" required placeholder="Alamat lengkap"></textarea></label>
+
+          <div class="row c2">
+
+            <label class="f"><span>Email</span><input type="email" name="mg_email" required placeholder="email@contoh.com"></label>
+
+            <label class="f"><span>Jemaat / Gereja Asal</span><input type="text" name="mg_jemaat" required placeholder="Nama Jemaat"></label>
+
+          </div>
+
+          <div class="row c2">
+
+            <label class="f"><span>Distrik</span><select name="mg_distrik" id="mg_distrik" required></select><input type="hidden" name="mg_wilayah" id="mg_wilayah"></label>
+
+            <label class="f"><span>Jabatan Pelayanan Saat Ini</span><input type="text" name="mg_jabatan" placeholder="mis. Direktur Pathfinder"></label>
+
+          </div>
+
+
+
+          <h2 class="h">Informasi Master Guide</h2>
+
+          <div class="f"><span>Status Master Guide</span><div class="pills" data-name="mg_status" data-req data-opts="Sudah Investitur|Sedang Proses|Belum"></div></div>
+
+          <div class="row c2">
+
+            <label class="f"><span>Tahun Investitur Master Guide</span><input type="text" name="mg_tahunInvestitur" placeholder="mis. 2022"></label>
+
+            <label class="f"><span>Tempat Investitur</span><input type="text" name="mg_tempatInvestitur"></label>
+
+          </div>
+
+          <label class="f"><span>Nama Pembina / Direktur Pathfinder</span><input type="text" name="mg_pembina"></label>
+
+          <div class="f"><span>Pernah Mengikuti Pelatihan</span>
+
+            <div class="pills" data-name="mg_pelatihan" data-type="checkbox" data-opts="Basic Staff Training (BST)=BST|Leadership Training=Leadership|Camporee|AYMT"></div>
+
+            <input type="text" name="mg_pelatihanLainnya" placeholder="Pelatihan lainnya (opsional)">
+
+          </div>
+
+          <div class="row c2">
+
+            <div class="f"><span>Bersedia Membantu Pelayanan Kepemudaan DSKU</span><div class="pills" data-name="mg_bersedia" data-req data-opts="Ya|Tidak"></div></div>
+
+            <label class="f"><span>Bidang Pelayanan yang Diminati</span><input type="text" name="mg_bidang"></label>
+
+          </div>
+
+          <label class="f"><span>Catatan Tambahan</span><textarea name="mg_catatan" rows="3"></textarea></label>
+
+          <div class="pills" data-name="mg_verifikasi" data-type="checkbox" data-req data-opts="Saya menyatakan bahwa data yang saya isi adalah benar."></div>
+
+        </div>
+
+
+
+        <!-- ===== KAMPOREE ===== -->
+
+        <div id="form-kamporee" class="blk hide">
+
+          <h2 class="h">Data Peserta</h2>
+
+          <div class="row c2">
+
+            <label class="f"><span>Nama Lengkap</span><input type="text" name="kp_fullName" placeholder="Nama Lengkap"></label>
+
+            <label class="f"><span>Nama Panggilan</span><input type="text" name="kp_nickname"></label>
+
+          </div>
+
+          <div class="row c3">
+
+            <div class="f"><span>Jenis Kelamin</span><div class="pills" data-name="kp_gender" data-opts="Laki-laki=L|Perempuan=P"></div></div>
+
+            <label class="f"><span>Umur (Tahun)</span><input type="number" min="0" name="kp_umur"></label>
+
+            <label class="f"><span>Tempat/Tanggal Lahir</span><input type="text" name="kp_ttl"></label>
+
+          </div>
+
+          <label class="f"><span>Alamat</span><textarea name="kp_address" rows="2"></textarea></label>
+
+          <div class="row c2">
+
+            <label class="f"><span>No. HP / WhatsApp</span><input type="tel" name="kp_phone" placeholder="0812xxxx"></label>
+
+            <label class="f"><span>Jemaat / Gereja</span><input type="text" name="kp_jemaat"></label>
+
+          </div>
+
+          <div class="row c2">
+
+            <label class="f"><span>Klub Pathfinder / Pemuda</span><input type="text" name="kp_klub"></label>
+
+            <label class="f"><span>Distrik</span><select name="kp_distrik" id="kp_distrik"></select><input type="hidden" name="kp_wilayah" id="kp_wilayah"></label>
+
+          </div>
+
+
+
+          <h2 class="h">Data Kesehatan</h2>
+
+          <div class="f"><span>Golongan Darah</span><div class="pills" data-name="kp_goldar" data-opts="A|B|AB|O"></div></div>
+
+          <label class="f"><span>Riwayat Penyakit / Alergi</span><textarea name="kp_riwayat" rows="2" placeholder="Tulis 'Tidak ada' jika tidak ada"></textarea></label>
+
+          <div class="row c3">
+
+            <label class="f"><span>Kontak Darurat - Nama</span><input type="text" name="kp_darurat_nama"></label>
+
+            <label class="f"><span>Hubungan</span><input type="text" name="kp_darurat_hubungan" placeholder="mis. Orang Tua"></label>
+
+            <label class="f"><span>No. HP</span><input type="tel" name="kp_darurat_hp"></label>
+
+          </div>
+
+
+
+          <h2 class="h">Perlengkapan Peserta</h2>
+
+          <div class="f"><span>Ukuran Kaos</span><div class="pills" data-name="kp_kaos" data-opts="S|M|L|XL|XXL"></div></div>
+
+          <div class="f"><span>Transportasi yang Digunakan</span>
+
+            <div class="pills" data-name="kp_transport" data-opts="Bus|Mobil|Motor|Lainnya"></div>
+
+            <input type="text" name="kp_transportLainnya" placeholder="Sebutkan transportasi lainnya (opsional)">
+
+          </div>
+
+          <div class="pills" data-name="kp_verifikasi" data-type="checkbox" data-opts="Saya bersedia mengikuti seluruh kegiatan dan menaati aturan Kamporee Pemuda Advent."></div>
+
+        </div>
+
+
+
+        <!-- ===== PENDATAAN ORANG MUDA ===== -->
+
+        <div id="form-pendataan" class="blk hide">
+
+          <h2 class="h">Data Diri</h2>
+
+          <div class="row c2">
+
+            <label class="f"><span>Nama Lengkap</span><input type="text" name="pd_fullName" required placeholder="Nama Lengkap"></label>
+
+            <div class="f"><span>Jenis Kelamin</span><div class="pills" data-name="pd_gender" data-req data-opts="Laki-laki|Perempuan"></div></div>
+
+          </div>
+
+          <div class="row c2">
+
+            <label class="f"><span>Tempat, Tanggal Lahir</span><input type="text" name="pd_ttl" required placeholder="Kota, DD/MM/YYYY"></label>
+
+            <label class="f"><span>Nomor HP / WhatsApp</span><input type="tel" name="pd_phone" required placeholder="0812xxxx"></label>
+
+          </div>
+
+          <div class="row c2">
+
+            <label class="f"><span>Email</span><input type="email" name="pd_email" placeholder="email@contoh.com"></label>
+
+            <div class="f"><span>Status Baptis</span><div class="pills" data-name="pd_baptis" data-req data-opts="Sudah|Belum"></div></div>
+
+          </div>
+
+          <label class="f"><span>Alamat</span><textarea name="pd_address" rows="2" required placeholder="Alamat lengkap"></textarea></label>
+
+
+
+          <h2 class="h">Pendidikan &amp; Pekerjaan</h2>
+
+          <div class="f"><span>Status Saat Ini</span><div class="pills" data-name="pd_status" data-req data-opts="Pelajar|Mahasiswa|Bekerja|Lainnya"></div></div>
+
+          <div class="row c2">
+
+            <label class="f"><span>Sekolah / Kampus / Tempat Kerja</span><input type="text" name="pd_instansi"></label>
+
+            <label class="f"><span>Jurusan / Jabatan</span><input type="text" name="pd_jurusan"></label>
+
+          </div>
+
+
+
+          <h2 class="h">Gereja &amp; Pelayanan</h2>
+
+          <div class="row c2">
+
+            <label class="f"><span>Jemaat / Gereja Asal</span><input type="text" name="pd_jemaat" required placeholder="Nama Jemaat"></label>
+
+            <label class="f"><span>Distrik</span><select name="pd_distrik" id="pd_distrik" required></select><input type="hidden" name="pd_wilayah" id="pd_wilayah"></label>
+
+          </div>
+
+          <div class="f"><span>Keterlibatan Pelayanan</span>
+
+            <div class="pills" data-name="pd_pelayanan" data-type="checkbox" data-opts="Adventurer|Pathfinder|Master Guide|Paduan Suara / Musik|Pemuda Jemaat"></div>
+
+            <input type="text" name="pd_pelayananLainnya" placeholder="Pelayanan lainnya (opsional)">
+
+          </div>
+
+          <label class="f"><span>Talenta / Minat</span><input type="text" name="pd_talenta" placeholder="mis. musik, multimedia, olahraga"></label>
+
+          <label class="f"><span>Catatan Tambahan</span><textarea name="pd_catatan" rows="3"></textarea></label>
+
+          <div class="pills" data-name="pd_verifikasi" data-type="checkbox" data-req data-opts="Saya menyatakan bahwa data yang saya isi adalah benar."></div>
+
+        </div>
+
+
+
+        <!-- ===== UPLOAD (umum) ===== -->
+
+        <div class="f"><span>Bukti Pembayaran / Foto ID Card</span>
+
+          <div class="drop">
+
+            <input type="file" id="fileInput" accept="image/*" required aria-label="Upload foto bukti">
+
+            <svg class="i"><use href="#i-up"/></svg>
+
+            <p id="fileLabel">Klik untuk upload foto</p>
+
+          </div>
+
+        </div>
+
+
+
+        <button type="submit" class="send">KIRIM PENDAFTARAN</button>
+
+      </form>
+
+    </div>
+
+  </main>
+
+</div>
+
+
+
+<script>
+
+/* ===== KONFIGURASI SCRIPT URL ===== */
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbweAOnppdOAzkXVjZ3wJUdDZX67Zb3XLsv3-kVHQEh8xulNjNP1NbU2413ugdssHSs5Lw/exec";
+
+
+
+/* ===== DATA WILAYAH & DISTRIK ===== */
+
+const wilayahData = {
+
+  "Wilayah I": ["Distrik Binjai","Distrik Langkat Hulu","Distrik Langkat Hilir"],
+
+  "Wilayah II": ["Distrik Karo Timur","Distrik Karo Utara","Distrik Karo Pusat","Distrik Karo Selatan","Distrik Karo Barat A","Distrik Karo Barat B"],
+
+  "Wilayah III": ["Distrik Siantar Kota","Distrik Siantar","SLA-UASN","Distrik Tanjung Kasau","Distrik Perdagangan","Distrik Huta Bayu Raja","Distrik Tanah Jawa","Distrik Simalungun Selatan I","Distrik Simalungun Selatan II","Distrik Simalungun Barat","Distrik Simalungun Utara"],
+
+  "Wilayah IV": ["Distrik Dairi Selatan","Distrik Dairi Pusat","Distrik Dairi Timur","Distrik Dairi Barat","Distrik Parongil","Distrik Pakpak Barat"],
+
+  "Wilayah V": ["Distrik Samosir Timur","Distrik Samosir Barat","Distrik Samosir Selatan"],
+
+  "Wilayah VI": ["Distrik Toba Timur","Distrik Toba Barat","Distrik Toba Pusat","Distrik Habinsaran"]
+
+};
+
+function isiDistrik(sel, hidden){
+
+  let h = '<option value="">Pilih Distrik</option>';
+
+  for (const w in wilayahData){
+
+    h += `<optgroup label="${w}">` + wilayahData[w].map(d => `<option value="${d}">${d}</option>`).join('') + `</optgroup>`;
+
+  }
+
+  sel.innerHTML = h;
+
+  sel.addEventListener('change', function(){
+
+    const g = this.options[this.selectedIndex].parentElement;
+
+    hidden.value = (g && g.tagName === 'OPTGROUP') ? g.label : '';
+
+  });
+
+}
+
+isiDistrik(document.getElementById('mg_distrik'), document.getElementById('mg_wilayah'));
+
+isiDistrik(document.getElementById('kp_distrik'), document.getElementById('kp_wilayah'));
+
+isiDistrik(document.getElementById('pd_distrik'), document.getElementById('pd_wilayah'));
+
+
+
+/* ===== Pilihan (radio / checkbox) dibuat dari data-opts. Format: nilai=label|nilai2 ===== */
+
+document.querySelectorAll('.pills').forEach(g => {
+
+  const type = g.dataset.type || 'radio', req = g.hasAttribute('data-req') ? 'required' : '';
+
+  g.innerHTML = g.dataset.opts.split('|').map(o => {
+
+    const [v, l] = o.split('=');
+
+    return `<label><input type="${type}" name="${g.dataset.name}" value="${v}" ${req}><span>${l || v}</span></label>`;
+
+  }).join('');
+
+});
+
+
+
+/* ===== Jenis pendaftaran (sidebar + toggle di kartu) ===== */
+
+const segTrack = document.getElementById('segTrack');
+
+const formMG = document.getElementById('form-masterguide');
+
+const formKP = document.getElementById('form-kamporee');
+
+const formPD = document.getElementById('form-pendataan');
+
+const fileInput = document.getElementById('fileInput');
+
+const fileLabel = document.getElementById('fileLabel');
+
+let fileBase64 = "", fileType = "", filled = 0;
+
+
+
+function activate(target){
+
+  const map = {
+
+    masterguide: [formMG, 'Master Guide', 'Pendaftaran Master Guide'],
+
+    kamporee:    [formKP, 'Kamporee', 'Pendaftaran Kamporee'],
+
+    pendataan:   [formPD, 'Pendataan', 'Pendataan Orang Muda']
+
+  };
+
+  segTrack.dataset.active = target;
+
+  document.querySelectorAll('[data-target]').forEach(b => b.classList.toggle('on', b.dataset.target === target));
+
+  /* Field di form yang tersembunyi dinonaktifkan agar 'required' tidak menghalangi pengiriman */
+
+  for (const k in map){
+
+    const on = k === target;
+
+    map[k][0].classList.toggle('hide', !on);
+
+    map[k][0].querySelectorAll('input,select,textarea').forEach(el => el.disabled = !on);
+
+  }
+
+  document.getElementById('statType').textContent = map[target][1];
+
+  document.getElementById('title').textContent = map[target][2];
+
+  updateProgress();
+
+}
+
+document.querySelectorAll('[data-target]').forEach(b => b.addEventListener('click', () => { activate(b.dataset.target); closeMenu(); }));
+
+
+
+/* ===== Progres kelengkapan isian ===== */
+
+function updateProgress(){
+
+  const form = { masterguide: formMG, kamporee: formKP, pendataan: formPD }[segTrack.dataset.active];
+
+  const names = new Set(), done = new Set();
+
+  form.querySelectorAll('input,select,textarea').forEach(el => {
+
+    if (el.type === 'hidden' || !el.name) return;
+
+    names.add(el.name);
+
+    if ((el.type === 'radio' || el.type === 'checkbox') ? el.checked : el.value.trim() !== '') done.add(el.name);
+
+  });
+
+  names.add('file');
+
+  if (fileInput.files.length) done.add('file');
+
+  filled = done.size;
+
+  const pct = Math.round(done.size / names.size * 100);
+
+  document.getElementById('statPct').textContent = pct + '%';
+
+  document.getElementById('bar').style.width = pct + '%';
+
+}
+
+document.getElementById('pendaftaranForm').addEventListener('input', updateProgress);
+
+document.getElementById('pendaftaranForm').addEventListener('change', updateProgress);
+
+/* ===== Upload foto ===== */
+
+fileInput.addEventListener('change', function(){
+
+  const file = this.files[0];
+
+  if (!file) return;
+
+  fileLabel.textContent = file.name + " (" + (file.size / 1024).toFixed(1) + " KB)";
+
+  document.getElementById('statFile').textContent = 'Sudah diunggah';
+
+  const reader = new FileReader();
+
+  reader.onload = e => { fileBase64 = e.target.result.split(',')[1]; fileType = file.type; };
+
+  reader.readAsDataURL(file);
+
+  updateProgress();
+
+});
+
+
+
+/* ===== Tema terang / gelap ===== */
+
+function syncThemeLabel(){
+
+  const dark = document.documentElement.dataset.theme === 'dark';
+
+  document.querySelectorAll('.theme-label').forEach(l => l.textContent = dark ? 'Tema terang' : 'Tema gelap');
+
+}
+
+document.querySelectorAll('.theme-toggle').forEach(b => b.addEventListener('click', () => {
+
+  const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+
+  document.documentElement.dataset.theme = next;
+
+  try { localStorage.setItem('dsku-theme', next); } catch (e) {}
+
+  syncThemeLabel();
+
+}));
+
+syncThemeLabel();
+
+
+
+/* ===== Kembali ke Home (konfirmasi jika sudah ada isian) ===== */
+
+document.querySelectorAll('[data-home]').forEach(a => a.addEventListener('click', e => {
+
+  if (filled === 0) return;
+
+  e.preventDefault();
+
+  Swal.fire({
+
+    title: 'Kembali ke Home?', text: 'Data yang sudah diisi belum terkirim dan akan hilang.', icon: 'warning',
+
+    showCancelButton: true, confirmButtonText: 'Ya, kembali', cancelButtonText: 'Lanjut mengisi', confirmButtonColor: '#D6293B'
+
+  }).then(r => { if (r.isConfirmed) location.href = a.getAttribute('href'); });
+
+}));
+
+
+
+/* ===== Menu mobile ===== */
+
+const side = document.getElementById('side'), scrim = document.getElementById('scrim');
+
+function closeMenu(){ side.classList.remove('open'); scrim.classList.remove('open'); }
+
+document.getElementById('menuBtn').addEventListener('click', () => { side.classList.add('open'); scrim.classList.add('open'); });
+
+scrim.addEventListener('click', closeMenu);
+
+
+
+activate('masterguide');
+
+
+
+/* ===== SUBMIT ===== */
+
+document.getElementById('pendaftaranForm').addEventListener('submit', function(e){
+
+  e.preventDefault();
+
+  if (!fileBase64) { Swal.fire('Error', 'Harap upload foto bukti!', 'error'); return; }
+
+
+
+  const jenis = segTrack.dataset.active;
+
+  const prefix = { masterguide: 'mg_', kamporee: 'kp_', pendataan: 'pd_' }[jenis];
+
+  document.getElementById('loader').style.display = 'flex';
+
+
+
+  const rawData = {};
+
+  new FormData(this).forEach((value, key) => {
+
+    if (!key.startsWith(prefix)) return;
+
+    if (rawData[key] !== undefined) {
+
+      rawData[key] = Array.isArray(rawData[key]) ? [...rawData[key], value] : [rawData[key], value];
+
+    } else rawData[key] = value;
+
+  });
+
+
+
+  const payload = {
+
+    jenisPendaftaran: { masterguide: 'Master Guide', kamporee: 'Kamporee', pendataan: 'Pendataan' }[jenis],
+
+    ...rawData, fileBase64, fileType
+
+  };
+
+
+
+  fetch(SCRIPT_URL, { method: "POST", body: JSON.stringify(payload) })
+
+    .then(res => res.json())
+
+    .then(res => {
+
+      document.getElementById('loader').style.display = 'none';
+
+      if (res.result === "success") {
+
+        Swal.fire({ icon: 'success', title: 'BERHASIL!', text: 'Data Anda telah tersimpan di sistem.', confirmButtonColor: '#D6293B' })
+
+          .then(() => location.reload());
+
+      } else Swal.fire('Error', res.error, 'error');
+
+    })
+
+    .catch(() => {
+
+      document.getElementById('loader').style.display = 'none';
+
+      Swal.fire('Koneksi Gagal', 'Pastikan URL Apps Script benar!', 'error');
+
+    });
+
+});
+
+</script>
+
+</body>
+
+</html>

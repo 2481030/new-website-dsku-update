@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pathfinder DSKU — Materi Materi Kurikulum</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Instrument+Sans:ital,opsz,wght@0,4..35,300;0,4..35,400;0,4..35,500;0,4..35,600;1,4..35,400&display=swap" rel="stylesheet">
+<style>
+  <!-- GSAP untuk animasi premium -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#030c24;
+  --navy2:#071030;
+  --navy3:#0c1e55;
+  --blue:#1a56db;
+  --blue2:#2563eb;
+  --blue3:#3b82f6;
+  --gold:#f59e0b;
+  --gold2:#fbbf24;
+  --white:#fff;
+  --surface:#f0f5ff;
+  --surface2:#e8effc;
+  --card:#fff;
+  --text:#0f172a;
+  --muted:#64748b;
+  --border:rgba(203,213,225,0.7);
+  --r:28px;
+  --rx:40px;
+  --ease:cubic-bezier(.23,1,.32,1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--surface);color:var(--text);font-family:'Instrument Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--surface)}
+::-webkit-scrollbar-thumb{background:var(--blue2);border-radius:99px}
+
+/* ── MOUSE GLOW ── */
+#mg{position:fixed;width:500px;height:500px;border-radius:50%;pointer-events:none;z-index:1;background:radial-gradient(circle,rgba(26,86,219,.05) 0%,transparent 65%);transform:translate(-50%,-50%);transition:left .12s,top .12s}
+
+/* ── NAVBAR ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:900;transition:all .4s var(--ease)}
+.nav-in{max-width:1280px;margin:0 auto;padding:22px 40px;display:flex;align-items:center;justify-content:space-between;transition:all .4s var(--ease)}
+/* Tambahkan Media Query ini */
+@media(max-width:640px){
+  .nav-in{padding:15px 20px !important;}
+  .nav.s .nav-in{padding:10px 20px !important;}
+}
+.nav.s .nav-in{background:rgba(255,255,255,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);padding:14px 40px;border-bottom:1px solid var(--border);box-shadow:0 4px 32px rgba(0,0,0,.05)}
+.nav-logo{display:flex;align-items:center;gap:12px;text-decoration:none}
+.nav-logo img{width:52px;height:52px;border-radius:0;object-fit:contain;flex-shrink:0}
+.nav-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;text-transform:uppercase;letter-spacing:-.01em;color:#fff;transition:color .4s}
+.nav.s .nav-brand{color:var(--text)}
+.nav-brand em{font-style:normal;color:var(--gold);transition:color .4s}
+.nav.s .nav-brand em{color:var(--blue2)}
+.nav-sub{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.25em;color:rgba(255,255,255,.4);transition:color .4s}
+.nav.s .nav-sub{color:var(--muted)}
+.nav-links{display:flex;align-items:center;gap:28px}
+.nav-links a{font-size:13px;font-weight:500;color:rgba(255,255,255,.7);text-decoration:none;transition:all .2s;position:relative}
+.nav.s .nav-links a{color:var(--muted)}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:2px;background:currentColor;border-radius:99px;transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)}
+.nav-links a:hover{color:#fff}
+.nav.s .nav-links a:hover{color:var(--blue2)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{background:var(--gold);color:var(--navy);font-family:'Syne',sans-serif;font-size:12px;font-weight:800;padding:11px 26px;border-radius:99px;text-decoration:none;text-transform:uppercase;letter-spacing:.04em;transition:all .3s var(--ease);box-shadow:0 4px 20px rgba(245,158,11,.3);white-space:nowrap}
+.nav-cta:hover{transform:translateY(-2px) scale(1.04);box-shadow:0 8px 28px rgba(245,158,11,.45)}
+.nav.s .nav-cta{background:var(--blue2);color:#fff;box-shadow:0 4px 20px rgba(37,99,235,.25)}
+.nav.s .nav-cta:hover{box-shadow:0 8px 28px rgba(37,99,235,.4)}
+.ham{display:none;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:9px;color:#fff;cursor:pointer;transition:all .3s}
+.nav.s .ham{background:var(--surface2);border-color:var(--border);color:var(--text)}
+@media(max-width:900px){.nav-links{display:none}.nav-cta{display:none}.ham{display:flex}}
+
+/* MOBILE DRAWER */
+.drawer{position:fixed;inset:0;background:var(--navy);z-index:950;transform:translateX(100%);transition:transform .4s var(--ease);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:36px}
+.drawer.open{transform:translateX(0)}
+.drawer a{font-family:'Syne',sans-serif;font-weight:800;font-size:2.2rem;color:#fff;text-decoration:none;text-transform:uppercase;letter-spacing:-.03em;opacity:0;transform:translateX(40px);transition:all .35s var(--ease)}
+.drawer.open a{opacity:1;transform:translateX(0)}
+.drawer.open a:nth-child(1){transition-delay:.1s}
+.drawer.open a:nth-child(2){transition-delay:.16s}
+.drawer.open a:nth-child(3){transition-delay:.22s}
+.drawer.open a:nth-child(4){transition-delay:.28s}
+.drawer.open a:nth-child(5){transition-delay:.34s}
+.drawer a:hover{color:var(--gold)}
+.drawer-close{position:absolute;top:24px;right:24px;width:44px;height:44px;border-radius:10px;background:rgba(255,255,255,.08);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+
+/* ── HERO ── */
+.hero{min-height:100vh;background:linear-gradient(168deg,#020821 0%,#060e2c 25%,#0d1e57 55%,#071230 100%);position:relative;overflow:hidden;display:grid;place-items:center;padding:120px 40px 80px}
+.hero-noise{position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='.022'/%3E%3C/svg%3E");opacity:.5;pointer-events:none}
+.hero-blob{position:absolute;border-radius:50%;filter:blur(90px);pointer-events:none}
+.b1{width:750px;height:750px;background:radial-gradient(circle,rgba(26,86,219,.22),transparent 70%);top:-200px;right:-180px;animation:bd 20s ease-in-out infinite}
+.b2{width:600px;height:600px;background:radial-gradient(circle,rgba(124,58,237,.14),transparent 70%);bottom:-150px;left:-120px;animation:bd 26s ease-in-out infinite reverse}
+.b3{width:350px;height:350px;background:radial-gradient(circle,rgba(245,158,11,.08),transparent 70%);top:38%;left:32%;animation:bd 16s ease-in-out infinite;animation-delay:-8s}
+@keyframes bd{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-50px) scale(1.06)}66%{transform:translate(-25px,25px) scale(.94)}}
+.stars{position:absolute;inset:0;pointer-events:none}
+.star{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d) ease-in-out infinite}
+@keyframes tw{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:.9;transform:scale(1.6)}}
+.grid-floor{position:absolute;bottom:0;left:0;right:0;height:320px;background-image:linear-gradient(rgba(59,130,246,.1) 1px,transparent 1px),linear-gradient(90deg,rgba(59,130,246,.1) 1px,transparent 1px);background-size:64px 64px;transform:perspective(600px) rotateX(70deg);transform-origin:bottom center;-webkit-mask-image:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 100%);mask-image:linear-gradient(to top,rgba(0,0,0,.5) 0%,transparent 100%)}
+.scan{position:absolute;border-radius:50%;border:1px solid rgba(59,130,246,.18);top:50%;left:50%;animation:sc 7s ease-out infinite}
+@keyframes sc{0%{transform:translate(-50%,-50%) scale(.3);opacity:.6}100%{transform:translate(-50%,-50%) scale(2.2);opacity:0}}
+.hero-in{position:relative;z-index:10;max-width:1280px;width:100%;display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:center}
+@media(max-width:900px){.hero-in{grid-template-columns:1fr;gap:48px}}
+.hero-badge{display:inline-flex;align-items:center;gap:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(14px);border-radius:99px;padding:9px 20px;color:rgba(255,255,255,.85);font-size:10px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;margin-bottom:32px}
+.bp{width:7px;height:7px;border-radius:50%;background:var(--gold);animation:pr 2.5s ease-in-out infinite}
+@keyframes pr{0%,100%{box-shadow:0 0 0 3px rgba(245,158,11,.25)}50%{box-shadow:0 0 0 7px rgba(245,158,11,0),0 0 20px rgba(245,158,11,.4)}}
+.hero-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.2rem,5.8vw,5.5rem);line-height:1.1;letter-spacing:-.04em;color:#fff;margin-bottom:24px}
+.hero-title .grad{display:block;background:linear-gradient(110deg,#60a5fa 0%,#a78bfa 45%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:italic}
+.hero-desc{color:rgba(255,255,255,.5);font-size:16px;max-width:500px;line-height:1.8;margin-bottom:48px}
+.hero-btns{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--blue2),#1d4ed8);color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;padding:14px 30px;border-radius:14px;text-decoration:none;text-transform:uppercase;letter-spacing:.04em;transition:all .3s var(--ease);box-shadow:0 8px 30px rgba(37,99,235,.3)}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(37,99,235,.45)}
+.btn-outline{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.85);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;padding:14px 30px;border-radius:14px;text-decoration:none;text-transform:uppercase;letter-spacing:.04em;transition:all .3s var(--ease);backdrop-filter:blur(10px)}
+.btn-outline:hover{background:rgba(255,255,255,.12);border-color:rgba(255,255,255,.3);transform:translateY(-3px)}
+
+/* Hero right: search + cards */
+.search-wrap{position:relative;margin-bottom:24px}
+.search-input{width:100%;padding:18px 70px 18px 22px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);backdrop-filter:blur(20px);border-radius:16px;color:#fff;font-size:14px;font-family:'Instrument Sans',sans-serif;outline:none;transition:all .3s var(--ease)}
+.search-input::placeholder{color:rgba(255,255,255,.35)}
+.search-input:focus{border-color:rgba(99,179,237,.45);background:rgba(255,255,255,.1);box-shadow:0 0 0 4px rgba(59,130,246,.12)}
+.search-btn{position:absolute;right:8px;top:50%;transform:translateY(-50%);background:var(--blue2);border:none;border-radius:10px;padding:11px;color:#fff;cursor:pointer;display:flex;transition:all .3s var(--ease)}
+.search-btn:hover{background:#1d4ed8;transform:translateY(-50%) scale(1.08)}
+.qcards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:900px){ .qcards{grid-template-columns:repeat(2,1fr)} }
+@media(max-width:600px){.qcards{grid-template-columns:1fr}}
+.qcard{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:18px 14px;backdrop-filter:blur(16px);transition:all .4s var(--ease);cursor:default;position:relative;overflow:hidden}
+.qcard::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(59,130,246,.06),transparent 70%);border-radius:inherit}
+.qcard:hover{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.18);transform:translateY(-7px)}
+.qcard-num{font-family:'Syne',sans-serif;font-size:9px;font-weight:700;letter-spacing:.3em;color:rgba(255,255,255,.22);text-transform:uppercase;margin-bottom:14px}
+.qcard-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px}
+.qcard-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:#fff;text-transform:uppercase;margin-bottom:7px;letter-spacing:-.01em}
+.qcard-desc{font-size:11px;color:rgba(255,255,255,.4);line-height:1.6}
+.qcard-bar{position:absolute;bottom:0;left:0;right:0;height:2px;border-radius:0 0 18px 18px}
+.hero-scroll{position:absolute;bottom:28px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.3);font-size:9px;font-weight:600;letter-spacing:.25em;text-transform:uppercase;animation:sc2 3s ease-in-out infinite;z-index:10}
+@keyframes sc2{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(7px)}}
+.hero-scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,.3),transparent)}
+
+/* ── STATS BAR ── */
+.stats-wrap{padding:0 40px;margin-top:-48px;position:relative;z-index:20}
+.stats-bar{
+  max-width:1280px;
+  margin:0 auto;
+  padding:8px;
+  background:#fff;
+  border-radius:24px;
+  border:1px solid var(--border);
+  box-shadow:0 8px 48px rgba(0,0,0,.07);
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.stat-item{
+  min-width:0;
+  padding:24px 12px;
+  text-align:center;
+  position:relative;
+  transition:background .3s;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+}
+.stat-item:not(:nth-child(4n+1))::before{
+  content:'';
+  position:absolute;
+  left:0;
+  top:20%;
+  bottom:20%;
+  width:1px;
+  background:var(--border);
+}
+.stat-item:nth-child(n+5)::after{
+  content:'';
+  position:absolute;
+  top:0;
+  left:10%;
+  right:10%;
+  height:1px;
+  background:var(--border);
+}
+.stat-item:hover{background:var(--surface2);border-radius:18px}
+.stat-num{
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:clamp(1.65rem,2.5vw,2.4rem);
+  letter-spacing:-.04em;
+  background:linear-gradient(135deg,var(--navy3),var(--blue2));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  line-height:1;
+  margin-bottom:2px;
+}
+.stat-lbl{
+  font-size:10px;
+  font-weight:700;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  line-height:1.5;
+  color:#8fa2c3;
+}
+.stat-item.total{
+  margin:6px;
+  border-radius:16px;
+  background:linear-gradient(135deg,#087be8,#1645a8);
+}
+.stat-item.total:hover{background:linear-gradient(135deg,#086fd0,#123c96)}
+.stat-item.total::before,.stat-item.total::after{display:none}
+.stat-item.total .stat-num{
+  background:none;
+  -webkit-text-fill-color:#fff;
+  color:#fff;
+}
+.stat-item.total .stat-lbl{color:#e8f3ff}
+@media(max-width:640px){
+  .stats-wrap{padding:0 16px}
+  .stats-bar{grid-template-columns:repeat(2,minmax(0,1fr));padding:6px}
+  .stat-item{padding:20px 8px}
+  .stat-item:not(:nth-child(2n+1))::before{
+    content:'';
+    position:absolute;
+    left:0;
+    top:20%;
+    bottom:20%;
+    width:1px;
+    background:var(--border);
+  }
+  .stat-item:nth-child(4n+1)::before{display:none}
+  .stat-item:nth-child(n+3)::after{
+    content:'';
+    position:absolute;
+    top:0;
+    left:10%;
+    right:10%;
+    height:1px;
+    background:var(--border);
+    display:block;
+  }
+  .stat-item.total{margin:5px}
+  .stat-num{font-size:1.8rem}
+  .stat-lbl{font-size:9px;letter-spacing:.1em}
+}
+
+/* ── SECTION COMMON ── */
+.sec{padding:128px 40px}
+.si{max-width:1280px;margin:0 auto}
+.eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.3em;color:var(--blue2);display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.eyebrow::before{content:'';width:24px;height:2px;background:var(--blue2);border-radius:99px}
+.sec-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,3.8vw,3.2rem);letter-spacing:-.04em;color:var(--text);line-height:1.1}
+.sec-title .ac{color:var(--blue2)}
+.reveal{opacity:0;transform:translateY(38px);transition:all .85s var(--ease)}
+.reveal.vis{opacity:1;transform:translateY(0)}
+.from-left{opacity:0;transform:translateX(-42px);transition:all .85s var(--ease)}
+.from-left.vis{opacity:1;transform:translateX(0)}
+.from-right{opacity:0;transform:translateX(42px);transition:all .85s var(--ease)}
+.from-right.vis{opacity:1;transform:translateX(0)}
+
+/* ── ABOUT ── */
+.about-sec{background:var(--surface)}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}
+@media(max-width:900px){.about-grid{grid-template-columns:1fr;gap:48px}}
+.about-img-wrap{position:relative}
+.about-img-frame{border-radius:var(--rx);overflow:hidden;box-shadow:0 40px 100px rgba(15,31,92,.18)}
+.about-img-frame::after{content:'';position:absolute;inset:0;background:linear-gradient(160deg,transparent 50%,rgba(26,86,219,.08));border-radius:inherit;pointer-events:none}
+.about-img{width:100%;display:block;object-fit:cover;aspect-ratio:4/3}
+.float-a{position:absolute;bottom:-24px;right:-24px;background:var(--navy3);border-radius:20px;padding:20px 24px;box-shadow:0 20px 60px rgba(12,31,92,.4);animation:fy 5s ease-in-out infinite;border:1px solid rgba(59,130,246,.18)}
+.float-b{position:absolute;top:-16px;left:-16px;background:#fff;border-radius:16px;padding:14px 18px;box-shadow:0 12px 40px rgba(0,0,0,.1);animation:fy 6s ease-in-out infinite reverse;border:1px solid var(--border);display:flex;align-items:center;gap:10px}
+@keyframes fy{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+.float-a-num{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:#fff;letter-spacing:-.04em}
+.float-a-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.45);margin-top:3px}
+.float-b-icon{width:36px;height:36px;background:var(--surface2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
+.float-b-t{font-size:12px;font-weight:600;color:var(--text)}
+.float-b-s{font-size:10px;color:var(--muted);margin-top:2px}
+.about-body p{color:var(--muted);line-height:1.85;font-size:15px;margin-bottom:20px}
+.about-body strong{color:var(--text)}
+.feats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:32px}
+.feat{display:flex;align-items:flex-start;gap:12px;padding:18px;background:#fff;border:1px solid var(--border);border-radius:16px;transition:all .3s var(--ease)}
+.feat:hover{border-color:#bfdbfe;box-shadow:0 8px 28px rgba(37,99,235,.08);transform:translateY(-2px)}
+.feat-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.feat-t{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.feat-d{font-size:11px;color:var(--muted);line-height:1.6}
+
+/* ── MARQUEE ── */
+.marquee-sec{background:var(--navy);padding:20px 0;overflow:hidden;border-top:1px solid rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.04)}
+.marquee-track{display:flex;gap:0;width:max-content;animation:mq 32s linear infinite}
+.marquee-track:hover{animation-play-state:paused}
+@keyframes mq{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.marquee-item{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.25);padding:0 40px;white-space:nowrap;display:flex;align-items:center;gap:16px}
+.marquee-dot{width:5px;height:5px;border-radius:50%;background:var(--gold);opacity:.5}
+
+/* ── TABLE ── */
+.table-wrap {
+  background: #fff;
+  border-radius: var(--r);
+  border: 1px solid var(--border);
+  overflow-x: auto; /* Izinkan scroll horizontal */
+  -webkit-overflow-scrolling: touch; /* Scroll halus di iOS */
+  box-shadow: 0 8px 40px rgba(0,0,0,0.05);
+}
+table.t {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px; /* Memaksa tabel punya lebar minimal agar tidak berhimpit */
+}
+table.t thead tr{background:var(--surface)}
+table.t thead th{padding:18px 32px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);border-bottom:1px solid var(--border)}
+table.t tbody tr{transition:background .2s}
+table.t tbody tr:hover td{background:var(--surface2)}
+table.t tbody td{padding:18px 32px;border-bottom:1px solid rgba(241,245,249,.8);transition:background .2s}
+table.t tbody tr:last-child td{border-bottom:none}
+.t-age{font-family:'Syne',sans-serif;font-weight:800;font-size:1.2rem;color:var(--blue2);letter-spacing:-.03em}
+.t-eng{font-style:italic;color:var(--muted)}
+.t-id{font-weight:700;color:var(--text)}
+.t-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:10px}
+.t-badge{display:inline-flex;align-items:center;padding:4px 12px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em}
+
+/* ── BENEFITS ── */
+.benefits-card{background:linear-gradient(142deg,#040c26 0%,#0c1e58 50%,#111d4a 100%);border-radius:var(--rx);padding:72px 64px;position:relative;overflow:hidden;margin-top:80px}
+@media(max-width:768px){.benefits-card{padding:48px 28px}}
+.benefits-card::before{content:'';position:absolute;top:-180px;right:-180px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.16),transparent 70%)}
+.benefits-card::after{content:'';position:absolute;bottom:-120px;left:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.1),transparent 70%)}
+.bens{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;position:relative;z-index:1}
+.ben{display:flex;align-items:flex-start;gap:14px;padding:18px 20px;border-radius:16px;border:1px solid rgba(255,255,255,.06);transition:all .3s var(--ease)}
+.ben:hover{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.12);transform:translateX(5px)}
+.ben-check{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--blue2),#60a5fa);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;color:#fff;box-shadow:0 4px 12px rgba(37,99,235,.38);margin-top:2px}
+.ben p{font-size:13px;color:rgba(255,255,255,.7);line-height:1.65;font-weight:500}
+
+/* ── CURRICULUM ── */
+.curr-sec{background:#fff}
+.curr-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:64px}
+.curr-link{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border:2px solid var(--blue2);color:var(--blue2);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;border-radius:12px;text-decoration:none;transition:all .3s var(--ease)}
+.curr-link:hover{background:var(--blue2);color:#fff;transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.22)}
+.curr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.curr-card{border-radius:var(--r);overflow:hidden;border:1px solid var(--border);transition:all .4s var(--ease);background:#fff;position:relative}
+.curr-card:hover{transform:translateY(-12px) scale(1.01);border-color:transparent;box-shadow:0 32px 64px rgba(0,0,0,.1)}
+.curr-bar{height:4px}
+.curr-body{padding:32px}
+.curr-img{width:60px;height:60px;object-fit:contain;margin-bottom:20px}
+.curr-name{font-family:'Syne',sans-serif;font-weight:800;font-size:1.35rem;letter-spacing:-.02em;color:var(--text);text-transform:uppercase;margin-bottom:12px}
+.curr-desc{font-size:13px;color:var(--muted);line-height:1.75;margin-bottom:20px}
+.curr-tag{display:inline-flex;align-items:center;gap:7px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.2em;padding:7px 14px;border-radius:99px}
+
+/* ── ACTIVITIES (new) ── */
+.act-sec{background:var(--surface)}
+.act-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:900px){.act-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.act-grid{grid-template-columns:1fr}}
+.act-card{border-radius:var(--r);overflow:hidden;position:relative;aspect-ratio:3/4;cursor:pointer;group:act}
+.act-card img{width:100%;height:100%;object-fit:cover;transition:transform .6s var(--ease);display:block}
+.act-card:hover img{transform:scale(1.07)}
+.act-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(3,12,36,.9) 0%,rgba(3,12,36,.3) 50%,transparent 100%);transition:opacity .4s}
+.act-body{position:absolute;bottom:0;left:0;right:0;padding:28px;transform:translateY(0);transition:transform .4s var(--ease)}
+.act-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.25em;color:var(--gold);margin-bottom:10px}
+.act-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:#fff;letter-spacing:-.02em;margin-bottom:8px}
+.act-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .4s var(--ease),opacity .4s}
+.act-card:hover .act-desc{max-height:80px}
+.act-big{grid-row:span 2;aspect-ratio:unset}
+
+/* ── TIMELINE (new) ── */
+.timeline-sec{background:#fff}
+.timeline{position:relative;padding-left:32px}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--navy3),var(--blue3),transparent)}
+.tl-item{position:relative;padding-bottom:48px}
+.tl-item:last-child{padding-bottom:0}
+.tl-dot{position:absolute;left:-38px;top:4px;width:14px;height:14px;border-radius:50%;border:3px solid #fff;box-shadow:0 0 0 3px var(--blue2);background:var(--blue2)}
+.tl-item:nth-child(even) .tl-dot{background:var(--gold);box-shadow:0 0 0 3px var(--gold)}
+.tl-meta{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.25em;color:var(--muted);margin-bottom:8px}
+.tl-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.15rem;letter-spacing:-.02em;color:var(--text);margin-bottom:10px}
+.tl-desc{font-size:13px;color:var(--muted);line-height:1.75}
+.tl-tag{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:5px 14px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.15em}
+
+/* ── ACHIEVEMENT COUNTER (new) ── */
+.achiev-sec{background:linear-gradient(138deg,#030c24 0%,#071030 50%,#0c1e55 100%);padding:100px 40px;position:relative;overflow:hidden}
+.achiev-sec::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='.015'/%3E%3C/svg%3E");pointer-events:none}
+.achiev-grid{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:2px}
+@media(max-width:900px){.achiev-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:500px){.achiev-grid{grid-template-columns:1fr}}
+.achiev-item{padding:48px 32px;text-align:center;border:1px solid rgba(255,255,255,.05);position:relative;transition:background .3s}
+.achiev-item:hover{background:rgba(255,255,255,.03)}
+.achiev-num{font-family:'Syne',sans-serif;font-weight:800;font-size:3.5rem;letter-spacing:-.05em;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;margin-bottom:12px}
+.achiev-lbl{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.25em;color:rgba(255,255,255,.4)}
+.achiev-icon{font-size:32px;margin-bottom:16px;display:block}
+
+/* ── TESTIMONIALS (new) ── */
+.test-sec{background:var(--surface)}
+.test-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+@media(max-width:900px){.test-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.test-grid{grid-template-columns:1fr}}
+.test-card{background:#fff;border-radius:var(--r);border:1px solid var(--border);padding:32px;transition:all .35s var(--ease);position:relative;overflow:hidden}
+.test-card::before{content:'"';position:absolute;top:-10px;right:20px;font-family:'Syne',sans-serif;font-size:100px;font-weight:800;color:var(--surface2);line-height:1;pointer-events:none}
+.test-card:hover{transform:translateY(-8px);box-shadow:0 24px 56px rgba(0,0,0,.08);border-color:#bfdbfe}
+.test-stars{display:flex;gap:3px;margin-bottom:16px}
+.test-stars span{color:var(--gold);font-size:14px}
+.test-text{font-size:14px;color:var(--muted);line-height:1.8;margin-bottom:24px;position:relative;z-index:1}
+.test-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--navy3),var(--blue2));display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:#fff;flex-shrink:0}
+.test-name{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;color:var(--text)}
+.test-role{font-size:11px;color:var(--muted);margin-top:2px}
+.test-footer{display:flex;align-items:center;gap:12px}
+.test-featured{border:2px solid var(--blue2);box-shadow:0 20px 60px rgba(37,99,235,.1)}
+.test-badge{position:absolute;top:20px;right:20px;background:var(--blue2);color:#fff;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.15em;padding:4px 10px;border-radius:99px}
+
+/* ── DOCUMENT CENTER ── */
+.doc-sec{background:#fff}
+.doc-panel{background:#fff;border-radius:var(--rx);overflow:hidden;border:1px solid var(--border);box-shadow:0 20px 80px rgba(0,0,0,.06);display:grid;grid-template-columns:1fr 2fr}
+@media(max-width:768px){.doc-panel{grid-template-columns:1fr}}
+.doc-sidebar{background:linear-gradient(160deg,var(--navy) 0%,var(--navy3) 100%);padding:56px 40px;position:relative;overflow:hidden}
+.doc-sidebar::after{content:'';position:absolute;bottom:-80px;right:-80px;width:240px;height:240px;border-radius:50%;border:50px solid rgba(255,255,255,.03)}
+.doc-sidebar::before{content:'';position:absolute;top:-40px;left:-40px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.2),transparent 70%)}
+.doc-sidebar-ey{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3em;color:rgba(255,255,255,.35);margin-bottom:14px;position:relative;z-index:1}
+.doc-sidebar-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.9rem;color:#fff;letter-spacing:-.04em;line-height:1.1;text-transform:uppercase;margin-bottom:18px;position:relative;z-index:1}
+.doc-sidebar p{color:rgba(255,255,255,.45);font-size:13px;line-height:1.85;position:relative;z-index:1}
+.doc-stat-list{margin-top:36px;display:flex;flex-direction:column;gap:10px;position:relative;z-index:1}
+.doc-stat{display:flex;align-items:center;gap:12px;padding:13px 16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:12px}
+.doc-stat-icon{width:32px;height:32px;background:rgba(59,130,246,.2);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#60a5fa;flex-shrink:0;font-size:16px}
+.doc-stat-lbl{font-size:11px;color:rgba(255,255,255,.5)}
+.doc-stat-val{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#fff}
+.doc-content{padding:48px 40px}
+@media(max-width:600px){.doc-content{padding:32px 24px}}
+.doc-sec-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.3em;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.doc-sec-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+.doc-list{display:flex;flex-direction:column;gap:10px}
+.doc-item{display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:var(--surface);border:1px solid var(--border);border-radius:16px;text-decoration:none;transition:all .3s var(--ease)}
+.doc-item:hover{background:#eff6ff;border-color:#bfdbfe;transform:translateX(4px);box-shadow:0 6px 20px rgba(37,99,235,.07)}
+.doc-item-l{display:flex;align-items:center;gap:14px}
+.doc-icon{width:44px;height:44px;background:#dbeafe;color:#1d4ed8;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.doc-name{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;color:var(--text);text-transform:uppercase;letter-spacing:-.01em}
+.doc-meta{font-size:10px;color:var(--muted);margin-top:2px;text-transform:uppercase;letter-spacing:.1em;font-weight:600}
+.doc-dl{width:36px;height:36px;border-radius:10px;background:#fff;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--blue2);transition:all .3s;flex-shrink:0;font-size:16px}
+.doc-item:hover .doc-dl{background:var(--blue2);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(37,99,235,.28)}
+
+/* ── COUNTDOWN (new) ── */
+.cd-sec{background:var(--surface);padding:80px 40px}
+.cd-card{max-width:900px;margin:0 auto;background:linear-gradient(135deg,var(--navy2),var(--navy3));border-radius:var(--rx);padding:64px 56px;text-align:center;position:relative;overflow:hidden;border:1px solid rgba(59,130,246,.15)}
+.cd-card::before{content:'';position:absolute;top:-100px;right:-100px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(37,99,235,.15),transparent 70%);pointer-events:none}
+.cd-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.5rem,3vw,2.2rem);color:#fff;letter-spacing:-.04em;margin-bottom:8px}
+.cd-sub{font-size:14px;color:rgba(255,255,255,.45);margin-bottom:48px}
+.cd-nums{display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap}
+.cd-block{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:16px;padding:20px 16px;min-width:80px;text-align:center;backdrop-filter:blur(10px)}
+.cd-n{font-family:'Syne',sans-serif;font-weight:800;font-size:2.4rem;color:#fff;letter-spacing:-.05em;line-height:1}
+.cd-l{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.25em;color:rgba(255,255,255,.4);margin-top:6px}
+.cd-sep{font-family:'Syne',sans-serif;font-weight:800;font-size:2rem;color:rgba(255,255,255,.2)}
+
+/* ── NEWSLETTER (new) ── */
+.nl-sec{background:#fff;padding:100px 40px}
+.nl-card{max-width:720px;margin:0 auto;text-align:center}
+.nl-form{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+.nl-input{flex:1;min-width:220px;padding:16px 22px;background:var(--surface);border:1px solid var(--border);border-radius:14px;font-size:14px;font-family:'Instrument Sans',sans-serif;color:var(--text);outline:none;transition:all .3s var(--ease)}
+.nl-input::placeholder{color:var(--muted)}
+.nl-input:focus{border-color:var(--blue3);background:#fff;box-shadow:0 0 0 4px rgba(59,130,246,.1)}
+.nl-btn{background:linear-gradient(135deg,var(--blue2),#1d4ed8);color:#fff;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;padding:16px 30px;border-radius:14px;border:none;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;transition:all .3s var(--ease);white-space:nowrap;box-shadow:0 8px 24px rgba(37,99,235,.28)}
+.nl-btn:hover{transform:translateY(-2px);box-shadow:0 14px 36px rgba(37,99,235,.4)}
+.nl-note{font-size:11px;color:var(--muted);margin-top:14px}
+#nl-success{display:none;color:#059669;font-weight:600;font-size:15px;margin-top:16px}
+
+/* ── FOOTER ── */
+footer{background:var(--navy);padding:72px 40px 40px;position:relative;overflow:hidden}
+footer::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(59,130,246,.35),transparent)}
+.ft-in{max-width:1280px;margin:0 auto}
+.ft-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:56px;padding-bottom:56px;margin-bottom:40px;border-bottom:1px solid rgba(255,255,255,.06)}
+@media(max-width:900px){.ft-top{grid-template-columns:1fr 1fr;gap:36px}}
+@media(max-width:500px){.ft-top{grid-template-columns:1fr}}
+.ft-logo-area{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.ft-logo-img{width:48px;height:48px;border-radius:0;opacity:1;filter:none;object-fit:contain;flex-shrink:0}
+.ft-brand{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff;text-transform:uppercase;letter-spacing:-.01em}
+.ft-brand em{font-style:normal;color:var(--gold)}
+.ft-brand-sub{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.25em;color:rgba(255,255,255,.28)}
+.ft-desc{font-size:13px;color:rgba(255,255,255,.4);line-height:1.85;max-width:280px}
+.ft-col-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.25em;color:rgba(255,255,255,.35);margin-bottom:20px}
+.ft-links{display:flex;flex-direction:column;gap:12px}
+.ft-links a{font-size:13px;color:rgba(255,255,255,.45);text-decoration:none;transition:color .2s;font-weight:500}
+.ft-links a:hover{color:rgba(255,255,255,.9)}
+.ft-social{display:flex;gap:10px;margin-top:24px}
+.ft-soc-btn{width:38px;height:38px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);font-size:16px;cursor:pointer;transition:all .3s;text-decoration:none}
+.ft-soc-btn:hover{background:var(--blue2);border-color:var(--blue2);color:#fff;transform:translateY(-2px)}
+.ft-bottom{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.ft-copy{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.2em;color:rgba(255,255,255,.2)}
+.ft-active{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:99px;padding:7px 16px;font-size:10px;font-weight:600;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:.1em}
+.ft-active-dot{width:6px;height:6px;border-radius:50%;background:#22c55e;box-shadow:0 0 8px #22c55e}
+
+/* ── NO RESULTS ── */
+#noResults{background:#fff;border-radius:20px;padding:56px 28px;border:1px solid var(--border);text-align:center;display:none}
+#noResults p{font-family:'Syne',sans-serif;font-weight:700;color:var(--muted)}
+
+/* ── BACK TO TOP ── */
+#btt{position:fixed;bottom:32px;right:32px;width:48px;height:48px;border-radius:14px;background:var(--blue2);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 8px 24px rgba(37,99,235,.35);transition:all .3s var(--ease);opacity:0;transform:translateY(12px);pointer-events:none;z-index:500}
+#btt.show{opacity:1;transform:translateY(0);pointer-events:all}
+#btt:hover{transform:translateY(-3px);box-shadow:0 14px 36px rgba(37,99,235,.45)}
+
+/* loading shimmer for activity imgs */
+.img-placeholder{background:linear-gradient(90deg,#e0e7ff 25%,#c7d2fe 50%,#e0e7ff 75%);background-size:200% 100%;animation:sh 1.5s infinite}
+@keyframes sh{0%{background-position:200% 0}100%{background-position:-200% 0}}
+</style>
+</head>
+<body>
+
+<!-- Mouse glow -->
+<div id="mg"></div>
+
+<!-- Mobile Drawer -->
+<div class="drawer" id="drawer">
+  <button class="drawer-close" id="drawerClose">✕</button>
+  <a href="index.html">Home</a>
+  <a href="MGDSKU.html">MGDSKU</a>
+  <a href="#kegiatan">Kegiatan</a>
+  <a href="#materi">Materi</a>
+  <a href="Informasi.html">Informasi</a>
+   <a href="Adventurer.html">Adventurer</a>
+  <a href="Pendaftaran.html" style="color:var(--gold)">Daftar →</a>
+</div>
+
+<!-- ═══ NAVBAR ═══ -->
+<header class="nav" id="navbar">
+  <div class="nav-in">
+    <a href="index.html" class="nav-logo">
+      <img src="images/dsku%20-%20Copy.png" alt="Logo">
+      <div>
+        <div class="nav-brand">PATHFINDER <em>DSKU</em></div>
+        <div class="nav-sub">Di Kelola IT TEAM DSKU</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="MGDSKU.html">MGDSKU</a>
+      <a href="#kegiatan">Kegiatan</a>
+      <a href="#materi">Materi</a>
+      <a href="Informasi.html">Informasi</a>
+      <a href="Adventurer.html">Adventurer</a>
+    </div>
+    <a href="Pendaftaran.html" class="nav-cta">Gabung Sekarang</a>
+    <button class="ham" id="hamBtn" aria-label="Menu">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-noise"></div>
+  <div class="hero-blob b1"></div>
+  <div class="hero-blob b2"></div>
+  <div class="hero-blob b3"></div>
+  <div class="stars" id="stars"></div>
+  <div class="scan" style="width:700px;height:700px;"></div>
+  <div class="scan" style="width:700px;height:700px;animation-delay:3.5s;"></div>
+  <div class="grid-floor"></div>
+
+  <div class="hero-in">
+    <!-- LEFT -->
+    <div>
+      <div class="hero-badge" style="animation:fadeUp .7s .1s var(--ease) both">
+        <div class="bp"></div>
+        Pusat Belajar & Pendalaman Alkitab
+      </div>
+      <h1 class="hero-title" style="animation:fadeUp .7s .22s var(--ease) both">
+        Orang Muda<br>Adalah Pilar<br>
+        <span class="grad">Gereja Tuhan</span>
+      </h1>
+      <p class="hero-desc" style="animation:fadeUp .7s .38s var(--ease) both">
+        Hidup kita adalah pilihan. Biarkan hidup kita menjadi berkat — bukan hanya untuk diri sendiri, tapi juga untuk orang lain dan kemuliaan-Nya.
+      </p>
+      <div class="hero-btns" style="animation:fadeUp .7s .52s var(--ease) both">
+        <a href="#mengenal" class="btn-primary">
+          Pelajari Lebih Lanjut
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+        </a>
+        <a href="#download" class="btn-outline">
+          Unduh Dokumen
+          <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+        </a>
+      </div>
+    </div>
+    <!-- RIGHT -->
+    <div style="animation:fadeUp .7s .48s var(--ease) both">
+      <div class="search-wrap">
+        <input type="text" id="materiSearch" placeholder="Cari materi — Janji, Mars, Peraturan..." class="search-input">
+        <button class="search-btn" aria-label="Cari">
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </button>
+      </div>
+      <div class="qcards" id="materiContainer">
+        <div class="searchable-item qcard">
+          <div class="qcard-num">01/03</div>
+          <div class="qcard-icon" style="background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.2)">🤝</div>
+          <div class="qcard-title">Janji Pathfinder</div>
+          <div class="qcard-desc">"Oleh rahmat Allah, saya berjanji menjadi murni, baik, dan setia..."</div>
+          <div class="qcard-bar" style="background:linear-gradient(90deg,#f59e0b,#fbbf24)"></div>
+        </div>
+        <div class="searchable-item qcard">
+          <div class="qcard-num">02/03</div>
+          <div class="qcard-icon" style="background:rgba(239,68,68,.12);border:1px solid rgba(239,68,68,.2)">🎖️</div>
+          <div class="qcard-title">Mars Pathfinder</div>
+          <div class="qcard-desc">"Kami adalah Pathfinder, laskar yang sangat kuat..."</div>
+          <div class="qcard-bar" style="background:linear-gradient(90deg,#e11d29,#f87171)"></div>
+        </div>
+        <div class="searchable-item qcard">
+          <div class="qcard-num">03/03</div>
+          <div class="qcard-icon" style="background:rgba(37,99,235,.12);border:1px solid rgba(37,99,235,.2)">📋</div>
+          <div class="qcard-title">Peraturan</div>
+          <div class="qcard-desc">Menjaga ketertiban dalam setiap kegiatan perkemahan...</div>
+          <div class="qcard-bar" style="background:linear-gradient(90deg,#2563eb,#60a5fa)"></div>
+        </div>
+      </div>
+      <div id="noResults"><p>Materi tidak ditemukan. Coba kata kunci lain!</p></div>
+    </div>
+  </div>
+
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ═══ STATS ═══ -->
+<div class="stats-wrap">
+  <div class="stats-bar reveal">
+    <div class="stat-item">
+      <div class="stat-num" data-target="364">0</div>
+      <div class="stat-lbl">Adventure</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="538">0</div>
+      <div class="stat-lbl">Pathfinder</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="208">0</div>
+      <div class="stat-lbl">Master Guide</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="106">0</div>
+      <div class="stat-lbl">Ambasador</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="140">0</div>
+      <div class="stat-lbl">Senior Youth Leader</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="517">0</div>
+      <div class="stat-lbl">PA Senior</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" data-target="102">0</div>
+      <div class="stat-lbl">Mahasiswa yang berkuliah<br>di non Advent.</div>
+    </div>
+    <div class="stat-item total">
+      <div class="stat-num" data-target="1975" data-format="id-ID">0</div>
+      <div class="stat-lbl">Jumlah</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MARQUEE ═══ -->
+<div class="marquee-sec">
+  <div class="marquee-track" id="mq"></div>
+</div>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="mengenal" class="sec about-sec">
+  <div class="si">
+    <div class="about-grid">
+      <div class="about-img-wrap from-left">
+        <div class="about-img-frame">
+          <img src="images/White.png" alt="Kegiatan Pathfinder" class="about-img">
+        </div>
+        <div class="float-a">
+          <div class="float-a-num">3 Ribu+</div>
+          <div class="float-a-lbl">Pemuda Advent<br>Sumatra Utara</div>
+        </div>
+        <div class="float-b">
+          <div class="float-b-icon">⛺</div>
+          <div>
+            <div class="float-b-t">Program Aktif</div>
+            <div class="float-b-s">365 hari / tahun</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-body from-right">
+        <div class="eyebrow">Overview</div>
+        <h2 class="sec-title" style="margin-bottom:28px">Apa itu Klub<br><span class="ac">Pathfinder?</span></h2>
+        <p>Bagi mereka yang sudah mengenalnya, <strong>Klub Pathfinder</strong> akan identik dengan kegiatan baris-berbaris, berkemah, hobi-hobi penuh rasa ingin tahu, atau belajar tentang serangga dan kelelawar.</p>
+        <p>Tujuan utama dari klub ini adalah untuk memperluas pandangan mereka terhadap dunia dan membangun hubungan dengan Tuhan, melalui kegiatan yang dirancang untuk anak-anak usia <strong>10 – 15 tahun.</strong> Klub yang disponsori Gereja Masehi Advent Hari Ketujuh ini menerima setiap remaja yang berjanji untuk mematuhi Perjanjian dan Peraturan Pathfinder terlepas dari asal gereja dan keyakinan mereka.</p>
+        <div class="feats">
+          <div class="feat">
+            <div class="feat-icon" style="background:#eff6ff">🌟</div>
+            <div>
+              <div class="feat-t" style="color:var(--blue2)">Kepemimpinan</div>
+              <div class="feat-d">Relawan terampil yang percaya pada Yesus dan menjadikan klub sebagai laboratorium pertumbuhan.</div>
+            </div>
+          </div>
+          <div class="feat">
+            <div class="feat-icon" style="background:#fef2f2">⚡</div>
+            <div>
+              <div class="feat-t" style="color:#dc2626">Kegiatan</div>
+              <div class="feat-d">Proyek pelayanan masyarakat, konservasi alam, hingga petualangan alam terbuka yang menantang.</div>
+            </div>
+          </div>
+          <div class="feat">
+            <div class="feat-icon" style="background:#f0fdf4">🌿</div>
+            <div>
+              <div class="feat-t" style="color:#059669">Alam Terbuka</div>
+              <div class="feat-d">Hiking, berkemah, navigasi, dan konservasi lingkungan hidup.</div>
+            </div>
+          </div>
+          <div class="feat">
+            <div class="feat-icon" style="background:#fffbeb">🙏</div>
+            <div>
+              <div class="feat-t" style="color:#d97706">Rohani</div>
+              <div class="feat-d">Pendalaman Alkitab, devosi pagi, dan kebaktian khusus remaja.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <div style="margin-top:100px" class="reveal">
+      <div style="text-align:center;margin-bottom:48px">
+        <div class="eyebrow" style="justify-content:center">Struktur Program</div>
+        <h3 class="sec-title">Jenjang Usia Kelas<br><span class="ac">Pathfinder</span></h3>
+        <div style="width:48px;height:4px;background:linear-gradient(90deg,var(--navy3),var(--blue3));border-radius:99px;margin:20px auto 0"></div>
+      </div>
+      <div class="table-wrap">
+        <table class="t">
+          <thead><tr><th>Usia</th><th>Kelas (English)</th><th>Kelas (Indonesia)</th><th>Fokus Utama</th></tr></thead>
+          <tbody>
+            <tr><td><span class="t-age">10</span></td><td><span class="t-eng">Friend</span></td><td><span class="t-dot" style="background:#1e40af"></span><span class="t-id">Sahabat</span></td><td><span class="t-badge" style="background:#eff6ff;color:#1e40af">Pengenalan Dasar</span></td></tr>
+            <tr><td><span class="t-age">11</span></td><td><span class="t-eng">Companion</span></td><td><span class="t-dot" style="background:#dc2626"></span><span class="t-id">Teman</span></td><td><span class="t-badge" style="background:#fef2f2;color:#dc2626">Sejarah Gereja</span></td></tr>
+            <tr><td><span class="t-age">12</span></td><td><span class="t-eng">Explorer</span></td><td><span class="t-dot" style="background:#059669"></span><span class="t-id">Penyelidik</span></td><td><span class="t-badge" style="background:#ecfdf5;color:#059669">Pertolongan Pertama</span></td></tr>
+            <tr><td><span class="t-age">13</span></td><td><span class="t-eng">Ranger</span></td><td><span class="t-dot" style="background:#475569"></span><span class="t-id">Perintis</span></td><td><span class="t-badge" style="background:#f8fafc;color:#475569">Navigasi & Kepemimpinan</span></td></tr>
+            <tr><td><span class="t-age">14</span></td><td><span class="t-eng">Voyager</span></td><td><span class="t-dot" style="background:#7c3aed"></span><span class="t-id">Penjelajah</span></td><td><span class="t-badge" style="background:#f5f3ff;color:#7c3aed">Survival & Pelayanan</span></td></tr>
+            <tr><td><span class="t-age">15</span></td><td><span class="t-eng">Guide</span></td><td><span class="t-dot" style="background:#d97706"></span><span class="t-id">Pemimpin</span></td><td><span class="t-badge" style="background:#fffbeb;color:#d97706">Persiapan Pembina</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BENEFITS -->
+    <div class="benefits-card reveal">
+      <div style="text-align:center;margin-bottom:48px;position:relative;z-index:1">
+        <div class="eyebrow" style="justify-content:center;color:rgba(255,255,255,.4)">Program Kami</div>
+        <h3 class="sec-title" style="color:#fff">Kesempatan Pengembangan Diri</h3>
+        <p style="color:rgba(255,255,255,.4);font-size:14px;margin-top:12px">Program ini memeberikan Kesempatan Kepada orang muda untuk berkembang secara Rohani Fisik Dan Mental </p>
+      </div>
+      <div class="bens">
+        <div class="ben"><div class="ben-check">+</div><p>Mengembangkan harga diri dalam lingkungan yang menyenangkan dan aman.</p></div>
+        <div class="ben"><div class="ben-check">+</div><p>Mengembangkan apresiasi terhadap spiritualitas Kristiani yang mendalam.</p></div>
+        <div class="ben"><div class="ben-check">+</div><p>Kepemimpinan, kerja sama tim, dan pemecahan masalah secara kreatif.</p></div>
+        <div class="ben"><div class="ben-check">+</div><p>Fokus pada alam terbuka: hiking, berkemah, dan konservasi.</p></div>
+        <div class="ben"><div class="ben-check">+</div><p>Pembelajaran kerajinan tangan, seni, dan keterampilan praktis kehidupan.</p></div>
+        <div class="ben"><div class="ben-check">+</div><p>Kesadaran akan sukacita melayani kebutuhan masyarakat sekitar.</p></div>
+        <div class="ben"><div class="ben-check">+</div><p>Gaya hidup sehat, bebas narkoba, dan sesuai nilai Kristiani.</p></div>
+        <div class="ben"><div class="ben-check">+</div><p>Mempersiapkan generasi muda sebagai pemimpin masa depan gereja.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ACTIVITIES ═══ -->
+<section id="kegiatan" class="sec act-sec">
+  <div class="si">
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:64px" class="reveal">
+      <div>
+        <div class="eyebrow">Galeri</div>
+        <h2 class="sec-title">Aktivitas &amp;<br><span class="ac">Kegiatan Kami</span></h2>
+        <p style="color:var(--muted);font-size:15px;margin-top:16px;max-width:420px;line-height:1.75">Dari perkemahan hingga pelayanan masyarakat — setiap momen membentuk karakter generasi muda Advent.</p>
+      </div>
+      <a href="Pendaftaran.html" class="btn-primary" style="background:linear-gradient(135deg,var(--navy3),var(--blue2))">
+        Ikut Bergabung →
+      </a>
+    </div>
+    <div class="act-grid">
+      <div class="act-card act-big reveal">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#1e3a8a 0%,#0f172a 100%);display:flex;align-items:center;justify-content:center;font-size:80px">⛺</div>
+        <div class="act-overlay"></div>
+        <div class="act-body">
+          <div class="act-tag">Unggulan</div>
+          <div class="act-title">Perkemahan Tahunan</div>
+          <div class="act-desc">Perkemahan tahunan Pathfinder adalah puncak dari semua kegiatan — tenda, api unggun, pemuridan, dan persaudaraan sejati di bawah bintang.</div>
+        </div>
+      </div>
+      <div class="act-card reveal" style="transition-delay:.1s">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#065f46 0%,#022c22 100%);display:flex;align-items:center;justify-content:center;font-size:60px">🌿</div>
+        <div class="act-overlay"></div>
+        <div class="act-body">
+          <div class="act-tag">Alam</div>
+          <div class="act-title">Hiking & Konservasi</div>
+          <div class="act-desc">Menjelajah alam sembari belajar mencintai ciptaan Tuhan.</div>
+        </div>
+      </div>
+      <div class="act-card reveal" style="transition-delay:.2s">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#4c1d95 0%,#1e1b4b 100%);display:flex;align-items:center;justify-content:center;font-size:60px">🎗️</div>
+        <div class="act-overlay"></div>
+        <div class="act-body">
+          <div class="act-tag">Pelayanan</div>
+          <div class="act-title">Pelayanan Masyarakat</div>
+          <div class="act-desc">Berbagi kasih kepada sesama melalui aksi nyata di komunitas.</div>
+        </div>
+      </div>
+      <div class="act-card reveal" style="transition-delay:.3s">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#7c2d12 0%,#431407 100%);display:flex;align-items:center;justify-content:center;font-size:60px">📖</div>
+        <div class="act-overlay"></div>
+        <div class="act-body">
+          <div class="act-tag">Rohani</div>
+          <div class="act-title">Pendalaman Alkitab</div>
+          <div class="act-desc">Belajar firman Tuhan bersama dalam suasana yang menyenangkan.</div>
+        </div>
+      </div>
+      <div class="act-card reveal" style="transition-delay:.4s">
+        <div style="width:100%;height:100%;background:linear-gradient(135deg,#0c4a6e 0%,#082f49 100%);display:flex;align-items:center;justify-content:center;font-size:60px">🏅</div>
+        <div class="act-overlay"></div>
+        <div class="act-body">
+          <div class="act-tag">Prestasi</div>
+          <div class="act-title">Pos Ke Pos</div>
+          <div class="act-desc">Kompetisi tingkat daerah hingga nasional menguji bakat terbaik.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ACHIEVEMENT COUNTER ═══ -->
+<section class="achiev-sec">
+  <div class="achiev-grid">
+    <div class="achiev-item reveal">
+      <span class="achiev-icon">🏕️</span>
+      <div class="achiev-num" data-target="120" data-suffix="+">0</div>
+      <div class="achiev-lbl">Klub Aktif</div>
+    </div>
+    <div class="achiev-item reveal" style="transition-delay:.1s">
+      <span class="achiev-icon">🎖️</span>
+      <div class="achiev-num" data-target="450" data-suffix="+">0</div>
+      <div class="achiev-lbl">Honor / Spesialisasi</div>
+    </div>
+    <div class="achiev-item reveal" style="transition-delay:.2s">
+      <span class="achiev-icon">🌏</span>
+      <div class="achiev-num" data-target="25">0</div>
+      <div class="achiev-lbl">Daerah Terjangkau</div>
+    </div>
+    <div class="achiev-item reveal" style="transition-delay:.3s">
+      <span class="achiev-icon">✝️</span>
+      <div class="achiev-num" data-target="3000" data-suffix="+">0</div>
+      <div class="achiev-lbl">Anggota Dibaptis</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TIMELINE ═══ -->
+<section class="sec timeline-sec">
+  <div class="si">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:flex-start" class="reveal-cols">
+      <div class="from-left">
+        <div class="eyebrow">Sejarah</div>
+        <h2 class="sec-title" style="margin-bottom:16px">Perjalanan<br><span class="ac">Pathfinder</span></h2>
+        <p style="color:var(--muted);font-size:15px;line-height:1.85;margin-bottom:40px">Dari sebuah gerakan kecil hingga menjadi organisasi remaja Advent terbesar di dunia dengan jutaan anggota.</p>
+        <a href="#materi" class="btn-primary" style="display:inline-flex">
+          Lihat Kurikulum →
+        </a>
+      </div>
+      <div class="from-right" style="padding-top:8px">
+        <div class="timeline">
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-meta">1950</div>
+            <div class="tl-title">Pathfinder Resmi Berdiri</div>
+            <div class="tl-desc">Pathfinder adalah organisasi kepemudaan resmi Gereja Masehi Advent Hari Ketujuh (GMAHK) yang berfokus pada pembinaan karakter, kepemimpinan, keterampilan, dan kehidupan rohani anak muda. Pathfinder resmi diperkenalkan oleh Gereja Advent pada tahun 1950 di Amerika Serikat. Sejak saat itu, Pathfinder berkembang ke berbagai negara dan menjadi salah satu organisasi pemuda Kristen terbesar di dunia.
+                                Melalui kegiatan seperti camping, honor, drill, pelayanan sosial, penjelajahan alam, dan pembinaan rohani, Pathfinder hadir untuk membantu generasi muda bertumbuh menjadi pribadi yang disiplin, aktif, dan dekat dengan Tuhan..</div>
+            <div class="tl-tag" style="background:#eff6ff;color:#1d4ed8">🌍 Global Launch</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-meta">1980an</div>
+            <div class="tl-title">Masuk ke Indonesia</div>
+            <div class="tl-desc">Pelayanan Gereja Advent mulai masuk ke Indonesia sekitar awal tahun 1900-an melalui Pulau Sumatra. Seiring berkembangnya gereja dan sekolah Advent di berbagai daerah, pelayanan untuk anak muda juga mulai dibentuk. Pathfinder kemudian mulai dikenal dan berkembang di Indonesia sebagai wadah pembinaan bagi anak-anak dan remaja Advent.
+                               Di Sumatra Utara sendiri, perkembangan Pathfinder berjalan bersama pertumbuhan jemaat Advent di Medan, Pematangsiantar, Toba, Simalungun, Sibolga, dan berbagai daerah lainnya. Klub-klub Pathfinder mulai berdiri di gereja-gereja lokal dan aktif mengadakan kegiatan rohani maupun sosial..</div>
+            <div class="tl-tag" style="background:#fffbeb;color:#d97706">🇮🇩 Indonesia</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-meta">2000an</div>
+            <div class="tl-title">DSKU Terbentuk</div>
+            <div class="tl-desc">Seiring bertumbuhnya jumlah jemaat dan pelayanan Advent di wilayah Sumatra Utara, Daerah Sumatera Kawasan Utara (DSKU) semakin aktif mengembangkan pelayanan Pathfinder melalui Departemen Pelayanan Pemuda Advent.
+                                Berbagai kegiatan besar mulai dilaksanakan untuk mempererat persaudaraan antar klub Pathfinder, seperti:
+                               camporee,
+                               perkemahan gabungan,
+                               pelantikan Master Guide,
+                               seminar kepemimpinan,
+                              pelayanan sosial,
+                              dan pelatihan kepahaman.
+                              Pathfinder DSKU terus berkembang menjadi salah satu wilayah Pathfinder yang aktif di Pulau Sumatra. Banyak klub Pathfinder lahir dan bertumbuh di berbagai gereja serta sekolah Advent di Sumatra Utara.</div>
+            <div class="tl-tag" style="background:#f5f3ff;color:#7c3aed">📋 DSKU</div>
+          </div>
+          <div class="tl-item">
+            <div class="tl-dot"></div>
+            <div class="tl-meta">Sekarang</div>
+            <div class="tl-title">Era Digital & Pertumbuhan</div>
+            <div class="tl-desc">aat ini Pathfinder DSKU terus berkembang menjadi wadah pembinaan generasi muda Advent yang aktif, kreatif, disiplin, dan memiliki jiwa pelayanan. Berbagai kegiatan rutin terus dilakukan untuk membangun iman, karakter, dan kebersamaan antar anggota Pathfinder.
+                                Salah satu momen bersejarah adalah terlaksananya Kampore Pathfinder Se-Sumatra pertama tahun 2024 di Silangit, Sumatra Utara, yang diikuti lebih dari 1.200 peserta dari berbagai daerah di Pulau Sumatra. Kegiatan ini menjadi bukti bahwa Pathfinder di Sumatra Utara terus bertumbuh dan menjadi berkat bagi banyak anak muda.
+                                Hingga sekarang, Pathfinder DSKU tetap menjadi tempat bagi generasi muda untuk belajar melayani, bekerja sama, bertumbuh dalam iman, dan menjadi terang di tengah masyarakat..</div>
+            <div class="tl-tag" style="background:#ecfdf5;color:#059669">🚀 Digital Era</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CURRICULUM ═══ -->
+<section id="materi" class="sec curr-sec">
+  <div class="si">
+    <div class="curr-head reveal">
+      <div>
+        <div class="eyebrow">Program Berjenjang</div>
+        <h2 class="sec-title">Kurikulum Kelas<br><span class="ac">Kemajuan</span></h2>
+        <p style="color:var(--muted);font-size:15px;margin-top:16px;max-width:420px;line-height:1.75">Dari usia 10 hingga 15 tahun, ikuti perjalanan pertumbuhan karakter dan keterampilan mental serta spiritual.</p>
+      </div>
+      <a href="https://pathfinder.pemudaadvent.id/wp-content/uploads/2024/01/PA_UIKB_Pathfinder_Kepahaman-Wajib_v1.0.2.pdf" class="curr-link" target="_blank" rel="noopener">
+        Lihat Seluruh Kepahaman
+        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+      </a>
+    </div>
+    <div class="curr-grid">
+      <div class="searchable-item curr-card reveal"><div class="curr-bar" style="background:#1e40af"></div><div class="curr-body"><img src="images/Pa biaru.png" alt="Sahabat" class="curr-img"><div class="curr-name">SAHABAT</div><div class="curr-desc">Kurikulum dasar untuk usia 10 tahun. Fokus pada pengenalan alam, hafalan ayat, dan kerjasama tim.</div><div class="curr-tag" style="background:#eff6ff;color:#1d4ed8"><span style="width:6px;height:6px;border-radius:50%;background:#1d4ed8;display:inline-block"></span>Usia 10 Tahun</div></div></div>
+      <div class="searchable-item curr-card reveal" style="transition-delay:.1s"><div class="curr-bar" style="background:#dc2626"></div><div class="curr-body"><img src="images/Pa Merah.png" alt="Teman" class="curr-img"><div class="curr-name">TEMAN</div><div class="curr-desc">Untuk usia 11 tahun. Mempelajari lebih dalam tentang sejarah gereja dan keterampilan berkemah.</div><div class="curr-tag" style="background:#fef2f2;color:#dc2626"><span style="width:6px;height:6px;border-radius:50%;background:#dc2626;display:inline-block"></span>Usia 11 Tahun</div></div></div>
+      <div class="searchable-item curr-card reveal" style="transition-delay:.2s"><div class="curr-bar" style="background:#059669"></div><div class="curr-body"><img src="images/PA.HIjau.png" alt="Penyelidik" class="curr-img"><div class="curr-name">PENYELIDIK</div><div class="curr-desc">Usia 12 tahun. Menekankan pada pertolongan pertama dasar dan etika Kristen di lingkungan sosial.</div><div class="curr-tag" style="background:#ecfdf5;color:#059669"><span style="width:6px;height:6px;border-radius:50%;background:#059669;display:inline-block"></span>Usia 12 Tahun</div></div></div>
+      <div class="searchable-item curr-card reveal"><div class="curr-bar" style="background:#475569"></div><div class="curr-body"><img src="images/Pa.Abuabu.png" alt="Perintis" class="curr-img"><div class="curr-name">PERINTIS</div><div class="curr-desc">Usia 13 tahun. Fokus pada pengembangan kepemimpinan tingkat lanjut dan navigasi alam bebas.</div><div class="curr-tag" style="background:#f8fafc;color:#475569"><span style="width:6px;height:6px;border-radius:50%;background:#475569;display:inline-block"></span>Usia 13 Tahun</div></div></div>
+      <div class="searchable-item curr-card reveal" style="transition-delay:.1s"><div class="curr-bar" style="background:#7c3aed"></div><div class="curr-body"><img src="images/Pa.Coklat.png" alt="Penjelajah" class="curr-img"><div class="curr-name">PENJELAJAH</div><div class="curr-desc">Usia 14 tahun. Eksplorasi mendalam mengenai kelangsungan hidup di alam dan pelayanan masyarakat.</div><div class="curr-tag" style="background:#f5f3ff;color:#7c3aed"><span style="width:6px;height:6px;border-radius:50%;background:#7c3aed;display:inline-block"></span>Usia 14 Tahun</div></div></div>
+      <div class="searchable-item curr-card reveal" style="transition-delay:.2s"><div class="curr-bar" style="background:#d97706"></div><div class="curr-body"><img src="images/Pa.kuning.png" alt="Pemimpin" class="curr-img"><div class="curr-name">PEMIMPIN</div><div class="curr-desc">Usia 15 tahun. Persiapan menjadi pembina dengan tanggung jawab penuh pada unit.</div><div class="curr-tag" style="background:#fffbeb;color:#d97706"><span style="width:6px;height:6px;border-radius:50%;background:#d97706;display:inline-block"></span>Usia 15 Tahun</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ TESTIMONIALS ═══ -->
+<section class="sec test-sec">
+  <div class="si">
+    <div style="text-align:center;margin-bottom:64px" class="reveal">
+      <div class="eyebrow" style="justify-content:center">Mereka Berkata</div>
+      <h2 class="sec-title">Pendapat Mengenai <span class="ac">PATHFINDER</span></h2>
+      <p style="color:var(--muted);font-size:15px;margin-top:16px;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.75">Dengarkan pengalaman nyata dari anggota dan pembina Pathfinder DSKU</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card test-featured reveal">
+        <div class="test-badge">Unggulan</div>
+        <div class="test-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="test-text">"Pathfinder mengubah hidup saya. Saya belajar tentang alam, kepemimpinan, dan yang terpenting — tentang Tuhan. Semua kenangan berkemah bersama teman-teman adalah harta yang tidak bisa dibeli."</p>
+        <div class="test-footer">
+          <div class="test-avatar">GP</div>
+          <div>
+            <div class="test-name">Gosvelt Purba</div>
+            <div class="test-role">Jemaat Siantar Jalan Simbolon</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card reveal" style="transition-delay:.1s">
+        <div class="test-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="test-text">"Sebagai pembina, saya melihat langsung bagaimana Pathfinder membentuk karakter anak-anak muda. Mereka tumbuh jadi pemimpin yang takut Tuhan dan bertanggung jawab."</p>
+        <div class="test-footer">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#7c3aed,#4c1d95)">MD</div>
+          <div>
+            <div class="test-name">Maria Doloksaribu</div>
+            <div class="test-role">Direktur Klub Pathfinder Medan</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card reveal" style="transition-delay:.2s">
+        <div class="test-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="test-text">"Saya tidak bisa bayangkan masa remaja tanpa Pathfinder. Program ini bukan sekadar kegiatan — ini keluarga. Saya menemukan sahabat sejati dan iman yang kuat di sini."</p>
+        <div class="test-footer">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#059669,#065f46)">PH</div>
+          <div>
+            <div class="test-name">Putri Hasibuan</div>
+            <div class="test-role">Pathfinder Guide, Kelas Pemimpin</div>
+          </div>
+        </div>
+      </div>
+            <div class="test-card reveal" style="transition-delay:.2s">
+        <div class="test-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="test-text">"Menurutku, Pathfinder itu tempat yang bagus untuk belajar disiplin, tanggung jawab, kerja sama, dan mendekatkan diri kepada Tuhan. Bukan cuma soal kegiatan, tapi juga tentang membentuk karakter jadi lebih baik dan berguna bagi orang lain. "</p>
+        <div class="test-footer">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#059669,#065f46)">AH</div>
+          <div>
+            <div class="test-name">Angel Siahaan</div>
+            <div class="test-role">Pathfinder Jalan Simbolon Club Akwila</div>
+          </div>
+        </div>
+      </div>
+      <div class="test-card reveal" style="transition-delay:.2s">
+        <div class="test-stars"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+        <p class="test-text">“Pathfinder adalah bagian yang tidak terpisahkan dari masa remaja saya. Di sini, saya bukan hanya mendapatkan pengalaman berharga, tetapi juga menemukan keluarga, persahabatan yang tulus, dan iman yang semakin bertumbuh. Setiap perjalanan bersama Pathfinder menjadi kenangan indah yang akan selalu saya bawa sepanjang hidup.”"</p>
+        <div class="test-footer">
+          <div class="test-avatar" style="background:linear-gradient(135deg,#059669,#065f46)">ZP</div>
+          <div>
+            <div class="test-name">Zyvana Purba</div>
+            <div class="test-role">Pathfinder AKWILA</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ COUNTDOWN ═══ -->
+<section class="cd-sec">
+  <div class="cd-card reveal">
+    <div class="cd-title">⛺ Perkemahan Besar Pathfinder DSKU 2025</div>
+    <div class="cd-sub">Bersiaplah untuk momen yang tak terlupakan — hitung mundur dimulai!</div>
+    <div class="cd-nums">
+      <div class="cd-block"><div class="cd-n" id="cd-d">00</div><div class="cd-l">Hari</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-n" id="cd-h">00</div><div class="cd-l">Jam</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-n" id="cd-m">00</div><div class="cd-l">Menit</div></div>
+      <div class="cd-sep">:</div>
+      <div class="cd-block"><div class="cd-n" id="cd-s">00</div><div class="cd-l">Detik</div></div>
+    </div>
+    <a href="Pendaftaran.html" class="btn-primary" style="margin-top:40px;display:inline-flex">
+      Daftar Sekarang → 
+    </a>
+  </div>
+</section>
+
+<!-- ═══ DOCUMENT CENTER ═══ -->
+<section id="download" class="sec doc-sec">
+  <div class="si">
+    <div style="text-align:center;margin-bottom:56px" class="reveal">
+      <div class="eyebrow" style="justify-content:center">Unduh Sekarang</div>
+      <h2 class="sec-title">Pusat Dokumen &<br><span class="ac">Unduhan Resmi</span></h2>
+    </div>
+    <div class="doc-panel reveal">
+      <div class="doc-sidebar">
+        <div class="doc-sidebar-ey">Dokumen Resmi</div>
+        <div class="doc-sidebar-title">Resource<br>Center</div>
+        <p>Pastikan klub Anda memiliki administrasi yang rapi. Unduh semua formulir dan buku panduan resmi di sini.</p>
+        <div class="doc-stat-list">
+          <div class="doc-stat">
+            <div class="doc-stat-icon">📄</div>
+            <div><div class="doc-stat-lbl">Format</div><div class="doc-stat-val">PDF &amp; XLSX</div></div>
+          </div>
+          <div class="doc-stat">
+            <div class="doc-stat-icon">⬇️</div>
+            <div><div class="doc-stat-lbl">Akses</div><div class="doc-stat-val">Gratis & Terbuka</div></div>
+          </div>
+          <div class="doc-stat">
+            <div class="doc-stat-icon">🔄</div>
+            <div><div class="doc-stat-lbl">Update</div><div class="doc-stat-val">Versi Terbaru 2024</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="doc-content">
+        <div class="doc-sec-lbl">Materi &amp; Peraturan</div>
+        <div class="doc-list">
+          <a href="downloads/Formulir_Laporan_Bulanan.xlsx" download class="doc-item">
+            <div class="doc-item-l">
+              <div class="doc-icon">📋</div>
+              <div>
+                <div class="doc-name">Materi Pembelajaran Pathfinders</div>
+                <div class="doc-meta">PDF Format · Download Gratis</div>
+              </div>
+            </div>
+            <div class="doc-dl">⬇</div>
+          </a>
+          <a href="#" class="doc-item">
+            <div class="doc-item-l">
+              <div class="doc-icon">📝</div>
+              <div>
+                <div class="doc-name">Formulir Pendaftaran Anggota</div>
+                <div class="doc-meta">DOCX Format · Formulir Resmi</div>
+              </div>
+            </div>
+            <div class="doc-dl">⬇</div>
+          </a>
+          <a href="#" class="doc-item">
+            <div class="doc-item-l">
+              <div class="doc-icon">🏕️</div>
+              <div>
+                <div class="doc-name">Panduan Perkemahan 2024</div>
+                <div class="doc-meta">PDF Format · Edisi Terbaru</div>
+              </div>
+            </div>
+            <div class="doc-dl">⬇</div>
+          </a>
+          <a href="#" class="doc-item">
+            <div class="doc-item-l">
+              <div class="doc-icon">📊</div>
+              <div>
+                <div class="doc-name">Laporan Bulanan Klub</div>
+                <div class="doc-meta">XLSX Format · Template</div>
+              </div>
+            </div>
+            <div class="doc-dl">⬇</div>
+          </a>
+        </div>
+        <div class="doc-sec-lbl" style="margin-top:28px">Kurikulum Kemajuan</div>
+        <div class="doc-list">
+          <a href="https://pathfinder.pemudaadvent.id/wp-content/uploads/2024/01/PA_UIKB_Pathfinder_Kepahaman-Wajib_v1.0.2.pdf" target="_blank" rel="noopener" class="doc-item">
+            <div class="doc-item-l">
+              <div class="doc-icon" style="background:#dbeafe">📚</div>
+              <div>
+                <div class="doc-name">Kepahaman Wajib Pathfinder</div>
+                <div class="doc-meta">PDF External · Kurikulum Lengkap</div>
+              </div>
+            </div>
+            <div class="doc-dl">↗</div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOAD SUPABASE LIBRARY -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- LOAD TAILWIND UNTUK MODAL (Opsional, jika belum ada) -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+  :root {
+    --gold-primary: #D4AF37;
+    --gold-light: #F9E076;
+    --teal-dark: #064e3b;
+    --muted: #94a3b8;
+  }
+
+  /* Gaya Premium Form */
+  .nl-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+  }
+
+  .nl-input {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid rgba(212, 175, 55, 0.3) !important;
+    color: white !important;
+    border-radius: 12px !important;
+    padding: 12px 16px;
+    transition: 0.3s;
+  }
+
+  .nl-input:focus {
+    border-color: var(--gold-primary) !important;
+    outline: none;
+    box-shadow: 0 0 10px rgba(212, 175, 55, 0.2);
+  }
+
+  .btn-gold {
+    background: linear-gradient(45deg, #D4AF37, #F9E076);
+    color: #1a1a1a;
+    font-weight: 700;
+    transition: 0.3s;
+    border-radius: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(212, 175, 55, 0.4);
+    filter: brightness(1.1);
+  }
+
+  /* Glassmorphism untuk Modal */
+  .input-glass {
+    background: rgba(6, 78, 59, 0.8) !important;
+    backdrop-filter: blur(15px);
+  }
+
+  .border-gold-primary { border-color: var(--gold-primary); }
+  .text-gold-light { color: var(--gold-light); }
+  .text-gold-primary { color: var(--gold-primary); }
+</style>
+
+<!-- ═══ KOTAK SARAN & PENDAPAT ═══ -->
+<section class="py-16 px-6" id="saran" style="background: #0f172a;">
+  <div class="max-w-3xl mx-auto nl-card reveal">
+
+    <div class="flex justify-center mb-4">
+      <span class="px-4 py-1 rounded-full border border-gold-primary text-[10px] uppercase tracking-[3px] text-gold-light">
+        Suara Anggota
+      </span>
+    </div>
+
+    <h2 class="text-4xl font-bold text-center text-white mb-4">
+      Kotak Saran & <span class="text-gold-light">Pendapat</span>
+    </h2>
+
+    <p class="text-center text-slate-400 mb-10 text-sm md:text-base leading-relaxed">
+      Kami sangat menghargai saran dan pendapat Anda. 
+      Masukan Anda sangat berharga untuk kemajuan dan perkembangan 
+      <strong>Pathfinder DSKU</strong>.
+    </p>
+
+    <!-- FORM -->
+    <form id="nlForm" onsubmit="handleSaran(event)" class="flex flex-col gap-4">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <input 
+          type="text"
+          placeholder="Nama Anda"
+          class="nl-input w-full"
+          id="feedbackName"
+          required
+        >
+
+        <input 
+          type="email"
+          placeholder="Email Anda"
+          class="nl-input w-full"
+          id="feedbackEmail"
+          required
+        >
+      </div>
+
+      <textarea 
+        placeholder="Tuliskan saran, pendapat, atau masukan Anda di sini..."
+        class="nl-input w-full min-h-[150px]"
+        id="feedbackMsg"
+        required
+      ></textarea>
+
+      <button type="submit" id="submitBtn" onclick="showLocked(event)" class="btn-gold py-4 mt-2">
+        Kirim Masukan Anda →
+      </button>
+
+    </form>
+
+    <div class="mt-6 text-center text-[11px] text-slate-500 uppercase tracking-widest">
+      🔒 Masukan Anda ditinjau secara internal demi kemajuan Pathfinder DSKU.
+    </div>
+
+  </div>
+</section>
+
+<!-- MODAL BERHASIL (GAYA PREMIUM) -->
+<div id="successModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-md px-6">
+    <div id="modalContent" class="input-glass p-8 w-full max-w-sm text-center border-gold-primary border-2 shadow-[0_0_30px_rgba(212,175,55,0.3)] rounded-3xl">
+        <div class="w-20 h-20 border-2 border-gold-primary rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-gold-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-gold-light mb-2 uppercase tracking-tighter">Berhasil!</h2>
+        <p class="text-gray-300 mb-8 text-xs tracking-wide">Terima kasih! Masukan Anda telah berhasil dikirim dan akan menjadi bahan evaluasi kami.</p>
+        <button onclick="closeSuccess()" class="btn-gold w-full py-4 rounded-xl text-xs">
+            Selesai
+        </button>
+    </div>
+</div>
+
+<!-- MODAL KOTAK SARAN DIKUNCI -->
+<div id="lockedModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/80 backdrop-blur-md px-6">
+    <div class="input-glass p-8 w-full max-w-sm text-center border-gold-primary border-2 shadow-[0_0_30px_rgba(212,175,55,0.3)] rounded-3xl">
+        <div class="w-20 h-20 border-2 border-gold-primary rounded-full flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-gold-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4"></path>
+            </svg>
+        </div>
+        <h2 class="text-2xl font-bold text-gold-light mb-2 uppercase tracking-tighter">Sedang Dikunci</h2>
+        <p class="text-gray-300 mb-8 text-xs tracking-wide">Kotak Saran &amp; Pendapat saat ini sedang dikunci. Kami akan segera mengabari Anda jika sudah dibuka kembali.</p>
+        <button type="button" onclick="closeLocked()" class="btn-gold w-full py-4 rounded-xl text-xs">
+            Mengerti
+        </button>
+    </div>
+</div>
+
+<!-- JAVASCRIPT BACKEND -->
+<script>
+// 1. KONFIGURASI SUPABASE
+const SUPABASE_URL = 'https://kftjkdpxeyxesjmutjnu.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_A_9b4LL_GidaO8eXrsugWg_FkiUmv-L';
+
+const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ===== KUNCI KOTAK SARAN =====
+// Ubah menjadi false jika kotak saran sudah dibuka kembali
+const SARAN_LOCKED = true;
+
+function showLocked(e) {
+    if (!SARAN_LOCKED) return;
+    e.preventDefault();
+    document.getElementById("lockedModal").classList.remove('hidden');
+}
+
+function closeLocked() {
+    document.getElementById("lockedModal").classList.add('hidden');
+}
+
+async function handleSaran(e) {
+    e.preventDefault();
+    if (SARAN_LOCKED) { showLocked(e); return; }
+
+    const form = document.getElementById("nlForm");
+    const btn = document.getElementById("submitBtn");
+    const modal = document.getElementById("successModal");
+
+    // Efek Loading
+    btn.innerHTML = "MEMPROSES DATA...";
+    btn.disabled = true;
+    btn.style.opacity = "0.5";
+
+    // Ambil Data
+    const namaData = document.getElementById("feedbackName").value;
+    const emailData = document.getElementById("feedbackEmail").value;
+    const pesanData = document.getElementById("feedbackMsg").value;
+
+    try {
+        // 2. KIRIM KE SUPABASE (Pastikan nama tabel adalah 'saran')
+        const { error } = await _supabase
+            .from('saran') 
+            .insert([
+                { 
+                    nama: namaData, 
+                    email: emailData, 
+                    pesan: pesanData 
+                }
+            ]);
+
+        if (error) throw error;
+
+        // 3. TAMPILKAN MODAL BERHASIL
+        modal.classList.remove('hidden');
+        form.reset();
+
+    } catch (err) {
+        console.error("Error:", err.message);
+        alert("Gagal mengirim data: " + err.message);
+    } finally {
+        btn.innerHTML = "Kirim Masukan Anda →";
+        btn.disabled = false;
+        btn.style.opacity = "1";
+    }
+}
+
+// FUNGSI TUTUP MODAL
+function closeSuccess() {
+    document.getElementById("successModal").classList.add('hidden');
+    // Opsional: scroll kembali ke atas atau refresh
+}
+</script>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="ft-in">
+    <div class="ft-top">
+      <div>
+        <div class="ft-logo-area">
+          <img src="images/dsku%20-%20Copy.png" alt="Logo" class="ft-logo-img">
+          <div>
+            <div class="ft-brand">PATHFINDER <em>DSKU</em></div>
+            <div class="ft-brand-sub">DI KELOLA IT TEAM DSKU</div>
+          </div>
+        </div>
+        <p class="ft-desc">Pusat belajar dan pendalaman Alkitab untuk orang muda Advent di Sumatera Kawasan Utara. Bersama membangun generasi yang takut akan Tuhan.</p>
+        <div class="ft-social">
+          <a href="#" class="ft-soc-btn" title="Facebook">f</a>
+          <a href="#" class="ft-soc-btn" title="Instagram" style="font-style:italic">in</a>
+          <a href="#" class="ft-soc-btn" title="YouTube">▶</a>
+          <a href="#" class="ft-soc-btn" title="WhatsApp">✉</a>
+        </div>
+      </div>
+      <div>
+        <div class="ft-col-title">Navigasi</div>
+        <div class="ft-links">
+          <a href="index.html">Beranda</a>
+          <a href="#mengenal">Tentang Kami</a>
+          <a href="#kegiatan">Kegiatan</a>
+          <a href="#materi">Materi</a>
+          <a href="#download">Dokumen</a>
+        </div>
+      </div>
+      <div>
+        <div class="ft-col-title">Program</div>
+        <div class="ft-links">
+          <a href="#materi">Kelas Sahabat</a>
+          <a href="#materi">Kelas Teman</a>
+          <a href="#materi">Kelas Penyelidik</a>
+          <a href="#materi">Kelas Perintis</a>
+          <a href="#materi">Kelas Penjelajah</a>
+          <a href="#materi">Kelas Pemimpin</a>
+        </div>
+      </div>
+      <div>
+        <div class="ft-col-title">Kontak</div>
+        <div class="ft-links">
+          <a href="#">📍 Sumatera Utara, Indonesia</a>
+          <a href="#">📧 gosvelpurb@gmail.com</a>
+          <a href="#">📞 +6285805803119</a>
+          <a href="Pendaftaran.html">🎯 Daftar Sekarang</a>
+        </div>
+      </div>
+    </div>
+    <div class="ft-bottom">
+      <div class="ft-copy">&copy; 2024 Pathfinder DSKU. Semua hak dilindungi.</div>
+      <div class="ft-active"><div class="ft-active-dot"></div>Sistem Aktif</div>
+    </div>
+  </div>
+</footer>
+
+<!-- Back to top -->
+<button id="btt" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Kembali ke atas">↑</button>
+
+<style>
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.reveal-cols>*{opacity:0;transform:translateY(32px);transition:all .85s var(--ease)}
+.reveal-cols.vis>*{opacity:1;transform:translateY(0)}
+.reveal-cols.vis>*:nth-child(2){transition-delay:.15s}
+@media(max-width:900px){.reveal-cols{display:flex!important;flex-direction:column;gap:48px}}
+</style>
+
+<script>
+const ease='cubic-bezier(.23,1,.32,1)';
+
+// Mouse glow
+const mg=document.getElementById('mg');
+document.addEventListener('mousemove',e=>{mg.style.left=e.clientX+'px';mg.style.top=e.clientY+'px'});
+
+// Stars
+const sc=document.getElementById('stars');
+for(let i=0;i<140;i++){
+  const s=document.createElement('div');
+  s.className='star';
+  const sz=Math.random()*2+.4;
+  s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2.5+Math.random()*4.5}s;animation-delay:${Math.random()*5}s`;
+  sc.appendChild(s);
+}
+
+// Navbar scroll
+const nb=document.getElementById('navbar');
+window.addEventListener('scroll',()=>{
+  nb.classList.toggle('s',window.scrollY>60);
+  document.getElementById('btt').classList.toggle('show',window.scrollY>400);
+});
+
+// Mobile drawer
+const dr=document.getElementById('drawer');
+document.getElementById('hamBtn').onclick=()=>dr.classList.add('open');
+document.getElementById('drawerClose').onclick=()=>dr.classList.remove('open');
+dr.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>dr.classList.remove('open')));
+
+// Marquee
+const items=['Janji Pathfinder','Mars Pathfinder','Peraturan Klub','Honor & Spesialisasi','Kelas Sahabat','Kelas Teman','Kelas Penyelidik','Kelas Perintis','Kelas Penjelajah','Kelas Pemimpin','Perkemahan','Pelayanan Masyarakat'];
+const mq=document.getElementById('mq');
+const full=[...items,...items,...items,...items].map(t=>`<div class="marquee-item"><span class="marquee-dot"></span>${t}</div>`).join('');
+mq.innerHTML=full+full;
+
+// Reveal observer
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('vis'),i*60);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:.07});
+document.querySelectorAll('.reveal,.from-left,.from-right,.reveal-cols').forEach(el=>obs.observe(el));
+
+// Counter
+function animCount(el,target,suffix=''){
+  let n=0;const dur=1600;const step=target/(dur/16);
+  const t=setInterval(()=>{
+    n=Math.min(n+step,target);
+    const value=Math.floor(n);
+    const display=el.dataset.format?value.toLocaleString(el.dataset.format):value;
+    el.textContent=display+(n>=target?suffix:'');
+    if(n>=target)clearInterval(t);
+  },16);
+}
+const cobs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const t=parseInt(e.target.dataset.target);
+      const s=e.target.dataset.suffix||'';
+      if(!isNaN(t))animCount(e.target,t,s);
+      cobs.unobserve(e.target);
+    }
+  });
+},{threshold:.5});
+document.querySelectorAll('[data-target]').forEach(el=>cobs.observe(el));
+
+// 3D tilt on qcards
+document.querySelectorAll('.qcard').forEach(c=>{
+  c.addEventListener('mousemove',e=>{
+    const r=c.getBoundingClientRect();
+    const x=((e.clientX-r.left)/r.width-.5)*18;
+    const y=((e.clientY-r.top)/r.height-.5)*-13;
+    c.style.transform=`translateY(-7px) rotateY(${x}deg) rotateX(${y}deg)`;
+    c.style.transition='transform .08s ease';
+  });
+  c.addEventListener('mouseleave',()=>{
+    c.style.transform='';
+    c.style.transition='all .4s var(--ease)';
+  });
+});
+
+// Search
+document.getElementById('materiSearch').addEventListener('input',function(){
+  const f=this.value.toLowerCase();
+  const items=document.querySelectorAll('.searchable-item');
+  let found=false;
+  items.forEach(item=>{
+    const m=item.innerText.toLowerCase().includes(f);
+    item.style.display=m?'':'none';
+    if(m)found=true;
+  });
+  const nr=document.getElementById('noResults');
+  nr.style.display=(!found&&f)?'block':'none';
+});
+
+// Countdown — target date
+const target=new Date('2025-08-15T08:00:00');
+function updateCD(){
+  const now=new Date();
+  const diff=target-now;
+  if(diff<=0){document.querySelector('.cd-nums').innerHTML='<div style="color:#fff;font-family:Syne,sans-serif;font-size:1.4rem;font-weight:800">Kegiatan Telah Dimulai! 🎉</div>';return;}
+  const d=Math.floor(diff/86400000);
+  const h=Math.floor((diff%86400000)/3600000);
+  const m=Math.floor((diff%3600000)/60000);
+  const s=Math.floor((diff%60000)/1000);
+  document.getElementById('cd-d').textContent=String(d).padStart(2,'0');
+  document.getElementById('cd-h').textContent=String(h).padStart(2,'0');
+  document.getElementById('cd-m').textContent=String(m).padStart(2,'0');
+  document.getElementById('cd-s').textContent=String(s).padStart(2,'0');
+}
+updateCD();setInterval(updateCD,1000);
+
+// Newsletter
+function handleNL(e){
+  e.preventDefault();
+  document.getElementById('nlForm').style.display='none';
+  document.getElementById('nl-success').style.display='block';
+}
+
+// Smooth anchors
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',e=>{
+    const t=document.querySelector(a.getAttribute('href'));
+    if(t){e.preventDefault();t.scrollIntoView({behavior:'smooth',block:'start'})}
+  });
+});
+</script>
+</body>
+</html>

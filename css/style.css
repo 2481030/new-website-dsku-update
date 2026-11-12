@@ -1,0 +1,193 @@
+body {
+    margin:0;
+    font-family:Arial;
+    background:black;
+    color:white;
+}
+
+/* NAV */
+.nav {
+    position:fixed;
+    width:100%;
+    display:flex;
+    justify-content:space-between;
+    padding:20px;
+    background:rgba(0,0,0,0.5);
+    z-index:100;
+}
+
+.logo {
+    width:50px;
+}
+
+/* HERO */
+.hero {
+    height:100vh;
+    position:relative;
+}
+
+.hero video {
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.title {
+    font-size:60px;
+    letter-spacing:5px;
+}
+
+/* CAR SECTION */
+.cars {
+    padding:100px;
+    display:flex;
+    justify-content:center;
+    gap:50px;
+}
+
+.card {
+    width:250px;
+    transition:0.5s;
+}
+
+.card img {
+    width:100%;
+    border-radius:10px;
+}
+
+.card:hover {
+    transform:scale(1.1);
+}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSKU Website</title>
+
+<link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+<!-- 🔥 TENTANG -->
+<section class="tentang">
+    <div class="container">
+
+        <div class="left">
+            <h1>Tentang Kami Pathfinder DSKU</h1>
+            <div class="underline"></div>
+
+            <p>
+                Universitas Advent Indonesia (UNAI) adalah lembaga Pendidikan Tinggi...
+            </p>
+
+            <a href="#" class="btn">Pelayanan Pemuda Advent DSKU</a>
+        </div>
+
+        <div class="right">
+            <iframe src="https://www.youtube.com/embed/VIDEO_ID"></iframe>
+        </div>
+
+    </div>
+</section>
+
+<!-- 🔥 ANGKA -->
+<section class="angka">
+    <div class="container">
+
+        <div class="left">
+            <h1>Jumlah PATHFINDER DSKU Dalam Angka</h1>
+
+            <div class="grid">
+                <div class="box">
+                    <div id="f1" class="number">0</div>
+                    <div class="line"></div>
+                    Jumlah Daerah
+                </div>
+
+                <div class="box">
+                    <div id="f2" class="number">0</div>
+                    <div class="line"></div>
+                    Jumlah Klub
+                </div>
+
+                <div class="box">
+                    <div id="f3" class="number">0</div>
+                    <div class="line"></div>
+                    Kegiatan
+                </div>
+
+                <div class="box">
+                    <div id="f4" class="number">0</div>
+                    <div class="line"></div>
+                    Pemuda Aktif
+                </div>
+
+                <div class="box">
+                    <div id="f5" class="number">0</div>
+                    <div class="line"></div>
+                    Pembina
+                </div>
+
+                <div class="box">
+                    <div id="f6" class="number">0</div>
+                    <div class="line"></div>
+                    Adventurer
+                </div>
+            </div>
+        </div>
+
+        <div class="right">
+            <img src="images/DSKU-removebg-preview.png" class="logo">
+
+            <div class="circle">
+                <div id="total" class="big-number">0</div>
+                <div>Total Pemuda</div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- JS -->
+<script>
+function animate(id, end, speed) {
+    let start = 0;
+    let obj = document.getElementById(id);
+
+    let interval = setInterval(() => {
+        start++;
+        obj.innerText = start;
+
+        if (start >= end) clearInterval(interval);
+    }, speed);
+}
+
+window.onload = function() {
+    animate("f1", 50, 50);
+    animate("f2", 16, 50);
+    animate("f3", 40, 30);
+    animate("f4", 2000, 1);
+    animate("f5", 99, 20);
+    animate("f6", 300, 5);
+    animate("total", 1472, 2);
+};
+</script>
+
+</body>
+</html>
